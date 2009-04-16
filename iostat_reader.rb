@@ -1,8 +1,6 @@
 #!/usr/bin/ruby
 require 'rubygems'
 require 'newrelic_rpm'
-require 'iostat_reader/osx'
-require 'iostat_reader/linux'
 require 'logger'
 
 # You can select different newrelic.yml sections by setting the
@@ -11,8 +9,9 @@ require 'logger'
 # ENV['RUBY_ENV']  = 'production'
 
 module IostatReader
+require 'iostat_reader/osx'
+require 'iostat_reader/linux'
 
-  attr_reader :io_stats, :system_cpu, :user_cpu
   @log = Logger.new(STDOUT)
   @log.level = Logger::INFO
   
@@ -21,6 +20,7 @@ module IostatReader
   end
 
   class Monitor
+  attr_reader :io_stats, :system_cpu, :user_cpu
     def initialize
       stats_engine = NewRelic::Agent.instance.stats_engine
       @io_stats    = stats_engine.get_stats("System/Resource/DiskIO/mb", false)  # Usage in MB

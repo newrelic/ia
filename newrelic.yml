@@ -10,7 +10,7 @@ common: &default_settings
   license_key: 'bootstrap_newrelic_admin_license_key_000'
   agent_enabled: true
   app_name: System Monitor
-  enabled: false
+  enabled: true
   log_level: info
   ssl: false
   disable_samplers: true  
@@ -63,12 +63,20 @@ common: &default_settings
 
 # NOTE if your application has other named environments, you should
 # provide newrelic conifguration settings for these enviromnents here.
-
 monitor:
   <<: *default_settings
   # turn off communication to RPM service in development mode.
   # NOTE: for initial evaluation purposes, you may want to temporarily turn
   # the agent on in development mode.
-  enabled: true
+  host: staging.newrelic.com
+  port: 80
+  license_key: 210f20d1367af2b174d51fba097e21b67a25779d
+
+development:
+  <<: *default_settings
+  # turn off communication to RPM service in development mode.
+  # NOTE: for initial evaluation purposes, you may want to temporarily turn
+  # the agent on in development mode.
   host: rpm
   port: 80
+

@@ -1,12 +1,13 @@
-# Logfile created on Tue Apr 14 16:35:29 -0700 2009 by /
-[04/14/09 16:35:29 -0700 bkmac-3.local (8636)] INFO : Error collector is enabled in agent config
-[04/14/09 16:35:29 -0700 bkmac-3.local (8636)] INFO : Web container: 
-[04/14/09 16:35:29 -0700 bkmac-3.local (8636)] INFO : Transaction tracing is enabled in agent config
-[04/14/09 16:35:29 -0700 bkmac-3.local (8636)] INFO : New Relic RPM Agent 2.9.0 Initialized: pid = 8636, handler = 
-[04/14/09 16:35:29 -0700 bkmac-3.local (8636)] INFO : Agent Log found in /Users/Bill/dev/test/monitor/newrelic_agent.log
-[04/14/09 16:35:37 -0700 bkmac-3.local (8636)] WARN : DNS Error caching IP address: no address for rpm
-[04/14/09 16:35:54 -0700 bkmac-3.local (8636)] INFO : Connected to NewRelic Service at rpm:80
-[04/14/09 16:35:55 -0700 bkmac-3.local (8636)] INFO : Transaction sample rate: 
-[04/14/09 16:35:56 -0700 bkmac-3.local (8636)] INFO : Transaction traces will be sent to the RPM service
-[04/14/09 16:35:56 -0700 bkmac-3.local (8636)] INFO : Errors will be sent to the RPM service
-[04/14/09 16:35:56 -0700 bkmac-3.local (8636)] INFO : Reporting performance data every 60 seconds.
+# Logfile created on Thu Apr 16 14:51:28 -0700 2009 by /
+[04/16/09 14:51:28 -0700 nr00-s00026 (13413)] INFO : Error collector is enabled in agent config
+[04/16/09 14:51:28 -0700 nr00-s00026 (13413)] INFO : Web container: 
+[04/16/09 14:51:28 -0700 nr00-s00026 (13413)] INFO : Transaction tracing threshold is 2.0 seconds
+[04/16/09 14:51:28 -0700 nr00-s00026 (13413)] INFO : Transaction tracing is enabled in agent config
+[04/16/09 14:51:28 -0700 nr00-s00026 (13413)] INFO : New Relic RPM Agent 2.9.0 Initialized: pid = 13413
+[04/16/09 14:51:28 -0700 nr00-s00026 (13413)] INFO : Agent Log found in /home/newrelic/bill/epm/newrelic_agent.log
+[04/16/09 14:51:34 -0700 nr00-s00026 (13413)] INFO : Resolved staging.newrelic.com to 127.0.0.1
+[04/16/09 14:51:34 -0700 nr00-s00026 (13413)] INFO : Connected to NewRelic Service at staging.newrelic.com:80
+[04/16/09 14:51:34 -0700 nr00-s00026 (13413)] INFO : Transaction sample rate: 
+[04/16/09 14:51:34 -0700 nr00-s00026 (13413)] INFO : Transaction traces will be sent to the RPM service
+[04/16/09 14:51:34 -0700 nr00-s00026 (13413)] INFO : Errors will be sent to the RPM service
+[04/16/09 14:51:34 -0700 nr00-s00026 (13413)] INFO : Reporting performance data every 60 seconds.
