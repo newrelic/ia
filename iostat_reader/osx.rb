@@ -21,8 +21,8 @@ module IostatReader::OSX
         v = values.shift.to_f
         current_total += v
       end
-      log.info "Disk usage: #{current_total - running_total}"
-      io_stats.record_data_point current_total - running_total
+      log.info "Disk usage: #{current_total - running_total}mb"
+      io_stats.record_data_point (current_total - running_total) * 1024.0
       running_total      = current_total
       # Get the CPU stats
       user, system, idle = values.map { |v| v.to_f }

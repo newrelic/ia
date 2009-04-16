@@ -23,7 +23,7 @@ require 'iostat_reader/linux'
   attr_reader :io_stats, :system_cpu, :user_cpu
     def initialize
       stats_engine = NewRelic::Agent.instance.stats_engine
-      @io_stats    = stats_engine.get_stats("System/Resource/DiskIO/mb", false)  # Usage in MB
+      @io_stats    = stats_engine.get_stats("System/Resource/DiskIO/kb", false)  # Usage in MB
       @system_cpu  = stats_engine.get_stats("System/User CPU/percent", false)  # percentage utilization
       @user_cpu    = stats_engine.get_stats("System/System CPU/percent", false)  # percentage utilization
 

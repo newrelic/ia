@@ -1,6 +1,6 @@
 
 module IostatReader::Linux
-  def cmd; "iostat -dcm 15"  ; end
+  def cmd; "iostat -dck 15"  ; end
   def init
     # read to "Device:"
     begin 
@@ -21,7 +21,6 @@ module IostatReader::Linux
     end
   end
   def run
-    # The running total of MB transferred
     while line = @pipe.gets
       next if line.chomp =~ /^$|avg-cpu/ # skip if it's a header line
       # Get the CPU stats
@@ -37,7 +36,7 @@ module IostatReader::Linux
       @disk_count.times do | disk_number |
         values = @pipe.gets.split("\s")
         usage = values[5].to_f + values[6].to_f
-        log.info "Disk #{values[0]}: #{usage}mb"
+        log.info "Disk #{values[0]}: #{usage}kb"
         io_stats.record_data_point usage
       end
     end
