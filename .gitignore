@@ -1,2 +1,3 @@
 log/
 newrelic_agent.log
+newrelic.yml
