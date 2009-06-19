@@ -21,12 +21,12 @@ module NewRelic::EPM::IostatReader::OSX
       v = values.shift.to_f
       current_total += v
     end
-    log.info "Disk usage: #{current_total - running_total} mb"
+    log.debug "Disk usage: #{current_total - running_total} mb"
     io_stats.record_data_point((current_total - running_total) * 1024.0)
     running_total      = current_total
     # Get the CPU stats
     user, system, idle = values.map { |v| v.to_f }
-    log.info "CPU #{user}% (user), #{system}% (system)"
+    log.debug "CPU #{user}% (user), #{system}% (system)"
     user_cpu.record_data_point(user / 100.0)
     system_cpu.record_data_point(system / 100.0)
   end

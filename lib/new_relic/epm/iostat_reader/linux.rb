@@ -27,7 +27,7 @@ module NewRelic::EPM::IostatReader::Linux
     # Get the CPU stats
     values             = line.split("\s")
     user, nice, system = values.map { |v| v.to_f }
-    log.info "CPU #{user}% (user), #{system}% (system)"
+    log.debug "CPU #{user}% (user), #{system}% (system)"
     user_cpu.record_data_point(user / 100.0)
     system_cpu.record_data_point(system / 100.0)
     # skip two lines
@@ -37,7 +37,7 @@ module NewRelic::EPM::IostatReader::Linux
     @disk_count.times do | disk_number |
       values = @pipe.gets.split("\s")
       usage = values[5].to_f + values[6].to_f
-      log.info "Disk #{values[0]}: #{usage}kb"
+      log.debug "Disk #{values[0]}: #{usage}kb"
       io_stats.record_data_point usage
     end
   end
