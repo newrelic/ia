@@ -1,30 +1,30 @@
-require 'rubygems' unless ENV['NO_RUBYGEMS']
-%w[newrelic_rpm rake rake/clean fileutils newgem rubigen].each { |f| require f }
+require 'rubygems'
+require 'echoe'
+%w[rake rake/clean fileutils newgem rubigen].each { |f| require f }
 require File.dirname(__FILE__) + '/lib/newrelic_ia'
 
 # Generate all the Rake tasks
 # Run 'rake -T' to see list of generated tasks (from gem root directory)
-$hoe = Hoe.new('monitor', NewRelic::IA::VERSION) do |p|
-  p.developer('FIXME full name', 'FIXME email')
-  p.changes              = p.paragraphs_of("History.txt", 0..1).join("\n\n")
-  p.post_install_message = 'PostInstall.txt' # TODO remove if post-install message not required
-  p.rubyforge_name       = p.name # TODO this is default value
-  p.extra_deps         = [
+Echoe.new('newrelic_ia', NewRelic::IA::VERSION) do |p|
+  p.author ='Bill Kayser'
+  p.email = 'bkayser@newrelic.com'
+  p.summary = 'Gem for sending system statistics to New Relic RPM'
+  p.rubyforge_name       = p.name 
+  p.runtime_dependencies = [
      ['newrelic_rpm','>= 2.9.2'],
   ]
-  p.extra_dev_deps = [
+  p.development_dependencies = [
     ['newgem', ">= #{::Newgem::VERSION}"]
   ]
-  
-  p.clean_globs |= %w[**/.DS_Store tmp *.log]
+  p.test_pattern = "spec/*.rb"
+  p.ignore_pattern = "newrelic.yml"
+  p.executable_pattern = "bin/newrelic_ia"
+  # p.description =
+  # p.url =
+  p.install_message = File.read('PostInstall.txt')
+  p.clean_pattern |= %w[**/.DS_Store tmp *.log]
   path = (p.rubyforge_name == p.name) ? p.rubyforge_name : "\#{p.rubyforge_name}/\#{p.name}"
-  p.remote_rdoc_dir = File.join(path.gsub(/^#{p.rubyforge_name}\/?/,''), 'rdoc')
-  p.rsync_args = '-av --delete --ignore-errors'
 end
 
-require 'newgem/tasks' # load /tasks/*.rake
-require 'tasks/all' # load /tasks/*.rake
 Dir['tasks/**/*.rake'].each { |t| load t }
 
-# TODO - want other tests/tasks run by default? Add them to the list
-# task :default => [:spec, :features]
