@@ -1,4 +1,4 @@
-module NewRelic::EPM::IostatReader::OSX
+module NewRelic::IA::IostatReader::OSX
   def cmd; "iostat -dCI 2"  ; end
   def init
     # get the first header

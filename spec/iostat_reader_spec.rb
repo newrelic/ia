@@ -1,12 +1,12 @@
 require File.dirname(__FILE__) + '/spec_helper.rb'
-require 'new_relic/epm/iostat_reader'
+require 'new_relic/ia/iostat_reader'
 
-describe NewRelic::EPM::IostatReader do
+describe NewRelic::IA::IostatReader do
   
   before do
     @statsengine = NewRelic::Agent::StatsEngine.new
     NewRelic::Agent.instance.stubs(:stats_engine).returns(@statsengine)
-    @reader = NewRelic::EPM::IostatReader.new
+    @reader = NewRelic::IA::IostatReader.new
   end
   
   it "should read repeatedly" do

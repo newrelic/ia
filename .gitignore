@@ -1,3 +1,15 @@
+/newrelic.yml
 log/
-newrelic_agent.log
-newrelic.yml
+*~
+.DS_Store
+ 
+# eclipse conf file
+.settings
+.classpath
+.project
+.manager
+ 
+# other scm
+.svn
+
+ 

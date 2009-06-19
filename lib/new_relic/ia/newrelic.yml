@@ -1,0 +1,26 @@
+#
+# This is a configuration file for the RPM Agent, tailored
+# for use as a system monitor.
+#
+common: &default_settings
+  license_key: 'your licene key here'
+  agent_enabled: true
+  disable_samplers: true  
+  app_name: System Monitor
+  ssl: false
+  capture_params: false
+  transaction_tracer:
+    enabled: false
+
+# NOTE if your application has other named environments, you should
+# provide newrelic conifguration settings for these enviromnents here.
+production:
+  <<: *default_settings
+  enabled: true
+
+development:
+  <<: *default_settings
+  # turn off communication to RPM service in development mode.
+  # NOTE: for initial evaluation purposes, you may want to temporarily turn
+  # the agent on in development mode.
+  enabled: false

@@ -1,4 +1,4 @@
-= EPM
+= IA
 
 Prototype for a generic environment monitoring gem.
 

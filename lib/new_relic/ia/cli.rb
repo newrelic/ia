@@ -1,10 +1,10 @@
 require 'optparse'
 require 'logger'
 
-class NewRelic::EPM::CLI
+class NewRelic::IA::CLI
   
   @log = Logger.new(STDOUT)
-
+  
   class << self
     attr_accessor :log
     def level= l
@@ -34,6 +34,8 @@ class NewRelic::EPM::CLI
                 "quiet output") { @log_level = Logger::ERROR }
         opts.on("-e", "--environment=ENV",
                 "use ENV section in newrelic.yml") { |e| NewRelic::Control.instance.env = e }
+        opts.on("--install",
+                "create a default newrelic.yml") { |e| return self.install(stdout) }
         
         opts.on("-h", "--help",
                 "Show this help message.") { stdout.puts "#{opts}\n"; return 0 }
@@ -43,8 +45,8 @@ class NewRelic::EPM::CLI
             @aspects = args
           end
         rescue => e
-          puts e
-          puts opts
+          stdout.puts e
+          stdout.puts opts
           return 1
         end
       end
@@ -59,7 +61,7 @@ class NewRelic::EPM::CLI
         stdout.puts parser
         return 1
       end
-
+      
       self.level = @log_level 
       gem 'newrelic_rpm'
       require 'newrelic_rpm'
@@ -74,13 +76,27 @@ class NewRelic::EPM::CLI
   # Aspect definitions
   def iostat # :nodoc:
     self.class.log.info "Starting iostat monitor..."
-    require 'new_relic/epm/iostat_reader'
-    reader = NewRelic::EPM::IostatReader.new
+    require 'new_relic/ia/iostat_reader'
+    reader = NewRelic::IA::IostatReader.new
     Thread.new { reader.run }
   end
+  
   def disk
     self.class.log.info "Starting disk sampler..."
-    require 'new_relic/epm/disk_sampler'
-    NewRelic::Agent.instance.stats_engine.add_harvest_sampler NewRelic::EPM::DiskSampler.new    
+    require 'new_relic/ia/disk_sampler'
+    NewRelic::Agent.instance.stats_engine.add_harvest_sampler NewRelic::IA::DiskSampler.new    
+  end
+  
+  private 
+  def self.install(stdio)
+    if File.exists? "newrelic.yml"
+      stdio.puts "A newrelic.yml file already exists.  Please remove it before installing another."
+      1 # error
+    else      
+      FileUtils.copy File.join(File.dirname(__FILE__), "newrelic.yml"), "."
+      stdio.puts "A newrelic.yml template was copied to #{File.expand_path('.')}."
+      stdio.puts "Please add a license key to the file before starting."
+      0 # normal
+    end
   end
 end

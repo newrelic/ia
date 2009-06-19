@@ -1,10 +1,10 @@
 require File.dirname(__FILE__) + '/spec_helper.rb'
-require 'new_relic/epm/disk_sampler'
+require 'new_relic/ia/disk_sampler'
 # http://rspec.info/
-describe NewRelic::EPM::DiskSampler do
+describe NewRelic::IA::DiskSampler do
   
   before do
-    @sampler = NewRelic::EPM::DiskSampler.new
+    @sampler = NewRelic::IA::DiskSampler.new
 #    @statsengine = stub(:get_stats => @stats)
     @statsengine = NewRelic::Agent::StatsEngine.new
     @sampler.stats_engine = @statsengine

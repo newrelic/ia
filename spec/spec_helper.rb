@@ -7,11 +7,11 @@ rescue LoadError
 end
 
 $:.unshift(File.dirname(__FILE__) + '/../lib')
-require 'epm'
+require 'ia'
 require 'newrelic_rpm'
-require 'new_relic/epm/cli'
+require 'new_relic/ia/cli'
 module NewRelic; TEST = true; end unless defined? NewRelic::TEST
-NewRelic::EPM::CLI.level = Logger::ERROR
+NewRelic::IA::CLI.level = Logger::ERROR
 
 Spec::Runner.configure do |config|
   # == Fixtures

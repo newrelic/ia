@@ -7,7 +7,7 @@
 # There are implementations of the command reader for different platforms.  The
 # implementations are in modules which are included into the Monitor class.
 #
-class NewRelic::EPM::IostatReader
+class NewRelic::IA::IostatReader
   
   attr_reader :io_stats, :system_cpu, :user_cpu
   def initialize
@@ -23,7 +23,7 @@ class NewRelic::EPM::IostatReader
   end
   
   def self.log
-    NewRelic::EPM::CLI.log
+    NewRelic::IA::CLI.log
   end
   
   def log
@@ -32,10 +32,10 @@ class NewRelic::EPM::IostatReader
   
   case RUBY_PLATFORM
     when /darwin/
-    require 'new_relic/epm/iostat_reader/osx'
+    require 'new_relic/ia/iostat_reader/osx'
     include OSX 
     when /linux/
-    require 'new_relic/epm/iostat_reader/linux'
+    require 'new_relic/ia/iostat_reader/linux'
     include Linux
   else
     raise "unrecognized platform: #{RUBY_PLATFORM}"

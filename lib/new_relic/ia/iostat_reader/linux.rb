@@ -1,5 +1,5 @@
 
-module NewRelic::EPM::IostatReader::Linux
+module NewRelic::IA::IostatReader::Linux
   def cmd; "iostat -dck 15"  ; end
   def init
     # read to "Device:"

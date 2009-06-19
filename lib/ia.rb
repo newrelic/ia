@@ -9,7 +9,7 @@ gem 'newrelic_rpm'
 # ENV['RUBY_ENV']  = 'production'
 
 module NewRelic
-  module EPM
+  module IA
     VERSION = '0.1.0'
   end
 end

@@ -4,14 +4,14 @@ require 'new_relic/agent'
 # This is some demo code which shows how you might install your
 # own sampler.  This one theoretically monitors cpu.
 
-class NewRelic::EPM::DiskSampler < NewRelic::Agent::Sampler
+class NewRelic::IA::DiskSampler < NewRelic::Agent::Sampler
   case RUBY_PLATFORM 
   when /darwin/
     # Do some special stuff...
   when /linux/
     # Do some special stuff...
   else
-    NewRelic::EPM::CLI.log.warn "unsupported platform #{RUBY_PLATFORM}"
+    NewRelic::IA::CLI.log.warn "unsupported platform #{RUBY_PLATFORM}"
   end
 
   def initialize
