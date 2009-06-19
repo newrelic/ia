@@ -1,4 +1,4 @@
-#!/usr/bin/ruby
+require 'new_relic/ia/metric_names'
 
 # The iostat reader simply opens a pipe on the iostat command, listening every 15
 # seconds and taking a sample for RPM.  It runs on the thread of the caller
@@ -8,13 +8,13 @@
 # implementations are in modules which are included into the Monitor class.
 #
 class NewRelic::IA::IostatReader
-  
+  include NewRelic::IA::MetricNames
   attr_reader :io_stats, :system_cpu, :user_cpu
   def initialize
     stats_engine = NewRelic::Agent.instance.stats_engine
-    @io_stats    = stats_engine.get_stats("System/Resource/DiskIO/kb", false)  # Usage in MB
-    @system_cpu  = stats_engine.get_stats("System/User CPU/percent", false)  # percentage utilization
-    @user_cpu    = stats_engine.get_stats("System/System CPU/percent", false)  # percentage utilization
+    @io_stats    = stats_engine.get_stats(DISK_IO, false)  # Usage in MB
+    @system_cpu  = stats_engine.get_stats(SYSTEM_CPU, false)  # percentage utilization
+    @user_cpu    = stats_engine.get_stats(USER_CPU, false)  # percentage utilization
     
     # Open the iostat reporting every 15 seconds cumulative
     # values for disk transfers and cpu utilization

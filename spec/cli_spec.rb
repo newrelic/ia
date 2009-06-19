@@ -2,7 +2,6 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 require 'new_relic/ia/cli'
 require 'new_relic/ia/iostat_reader'
 require 'new_relic/ia/disk_sampler'
-#require 'new_relic/stats_engine'
 describe NewRelic::IA::CLI, "execute" do
   before(:each) do
     @stdout_io = StringIO.new

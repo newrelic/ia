@@ -11,11 +11,11 @@ describe NewRelic::IA::DiskSampler do
   end
   
   it "should poll on demand" do
-    3.times { @sampler.poll }
+    2.times { @sampler.poll }
     @statsengine.metrics.each do |m|
       stats = @statsengine.lookup_stat m
-      stats.call_count.should == 3
-      m.should match(/Custom\/Filesystem\/.*percent/)
+      stats.call_count.should == 2
+      m.should match(/System\/Filesystem\/.*percent/)
     end
   end
 end

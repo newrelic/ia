@@ -1,10 +1,12 @@
 #!/usr/bin/ruby
 require 'new_relic/agent'
+require 'new_relic/ia/metric_names'
 
 # This is some demo code which shows how you might install your
 # own sampler.  This one theoretically monitors cpu.
 
 class NewRelic::IA::DiskSampler < NewRelic::Agent::Sampler
+  include NewRelic::IA::MetricNames
   case RUBY_PLATFORM 
   when /darwin/
     # Do some special stuff...
@@ -21,7 +23,7 @@ class NewRelic::IA::DiskSampler < NewRelic::Agent::Sampler
 
   def disk_stats(filesystem)
     name = File.basename(filesystem)
-    @disk_stats[name] ||= stats_engine.get_stats("Custom/Filesystem/#{name}/percent", false)
+    @disk_stats[name] ||= stats_engine.get_stats(DISK.gsub('_name_', name), false)
   end
 
   # This gets called every 10 seconds, or once a minute depending

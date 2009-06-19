@@ -1,6 +1,6 @@
 require 'rubygems' unless ENV['NO_RUBYGEMS']
 %w[newrelic_rpm rake rake/clean fileutils newgem rubigen].each { |f| require f }
-require File.dirname(__FILE__) + '/lib/ia'
+require File.dirname(__FILE__) + '/lib/newrelic_ia'
 
 # Generate all the Rake tasks
 # Run 'rake -T' to see list of generated tasks (from gem root directory)

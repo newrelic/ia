@@ -7,7 +7,7 @@ rescue LoadError
 end
 
 $:.unshift(File.dirname(__FILE__) + '/../lib')
-require 'ia'
+require 'newrelic_ia'
 require 'newrelic_rpm'
 require 'new_relic/ia/cli'
 module NewRelic; TEST = true; end unless defined? NewRelic::TEST

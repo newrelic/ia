@@ -13,11 +13,10 @@ describe NewRelic::IA::IostatReader do
     
     @reader.read_next
     @reader.read_next
-    @reader.read_next
-    @statsengine.metrics.sort.should == ["System/System CPU/percent", "System/Resource/DiskIO/kb", "System/User CPU/percent"].sort
+    @statsengine.metrics.sort.should == ["System/CPU/System/percent", "System/CPU/User/percent", "System/Resource/DiskIO/kb"].sort
     @statsengine.metrics.each do |m|
       stats = @statsengine.lookup_stat m
-      stats.call_count.should == 3
+      stats.call_count.should == 2
     end
   end
 end
