@@ -3,14 +3,7 @@ module NewRelic::IA::IostatReader::Linux
   def cmd; "iostat -dck 15"  ; end
   def init
     # read to "Device:"
-    begin 
-      line = @pipe.gets
-    end until line =~ /^Device:/
-    
-    # do it again to skip the summary part:
-    begin 
-      line = @pipe.gets
-    end until line =~ /^Device:/
+    line = @pipe.gets until line =~ /^Device:/
     
     # read to first blank line
     @disk_count = 0
@@ -39,9 +32,9 @@ module NewRelic::IA::IostatReader::Linux
     @disk_count.times do | disk_number |
       line = @pipe.gets.chomp.strip
       values = line.split /\s+/
-      usage = values[5].to_f + values[6].to_f
+      usage = values[4].to_f + values[5].to_f
       log.debug "Disk #{values[0]}: #{usage}kb (processed '#{values.inspect}'"
-      io_stats.record_data_point usage
+      io_stats.record_data_point(usage * 1024)
     end
   end
 end

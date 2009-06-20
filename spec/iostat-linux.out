@@ -7,28 +7,28 @@ sda2              1.27        11.39        11.42   50284100   50407144
 sdb1              7.11        28.80        28.22  127150441  124602856
 
 avg-cpu:  %user   %nice %system %iowait  %steal   %idle
-          17.75    0.00    0.88    0.12    2.12   79.12
+          18.00    0.00    0.88    0.12    2.12   79.12
 
 Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sda1              2.50         0.00        36.00          0         72
-sda2              0.00         0.00         0.00          0          0
-sdb1             29.50         0.00       846.00          0       1692
+sda1              2.50         0.00        36.00          0         20
+sda2              0.00         0.00         0.00         10          0
+sdb1             29.50         0.00       846.00          0         30
 
 avg-cpu:  %user   %nice %system %iowait  %steal   %idle
-          11.14    0.00    0.13    0.00    0.25   88.49
+          1.5    0.00    0.13    0.00    0.25   88.49
 
 Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
 sda1              0.00         0.00         0.00          0          0
-sda2              0.00         0.00         0.00          0          0
-sdb1              0.00         0.00         0.00          0          0
+sda2              0.00         0.00         0.00          1          0
+sdb1              0.00         0.00         0.00          3          4
 
 avg-cpu:  %user   %nice %system %iowait  %steal   %idle
-          11.10    0.00    0.50    0.00    0.75   87.66
+          13.5    0.00    0.50    0.00    0.75   87.66
 
 Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sda1              3.50         0.00        40.00          0         80
+sda1              3.50         0.00        40.00       3000          0
 sda2              0.00         0.00         0.00          0          0
-sdb1              1.50         0.00        18.00          0         36
+sdb1              1.50         0.00        18.00          0       5000 
 
 avg-cpu:  %user   %nice %system %iowait  %steal   %idle
            9.76    0.00    0.50    0.00    0.88   88.86

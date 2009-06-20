@@ -19,7 +19,6 @@ class NewRelic::IA::IostatReader
     # Open the iostat reporting every 15 seconds cumulative
     # values for disk transfers and cpu utilization
     @pipe        = IO.popen(cmd)
-    init
   end
   
   def self.log
@@ -42,6 +41,7 @@ class NewRelic::IA::IostatReader
   end
   
   def run
+    init
     read_next while true
   end
 end
