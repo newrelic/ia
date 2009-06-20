@@ -1,5 +1,5 @@
 module NewRelic::IA::IostatReader::OSX
-  def cmd; "iostat -dCI 2"  ; end
+  def cmd; "iostat -dCI 15"  ; end
   def init
     # get the first header
     header               = @pipe.gets

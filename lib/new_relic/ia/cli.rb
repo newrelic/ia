@@ -14,6 +14,7 @@ class NewRelic::IA::CLI
     # Run the command line args.  Return nil if running
     # or an exit status if not.
     def execute(stdout, arguments=[])
+      @aspects = []
       @log = Logger.new(stdout)
       @log_level = Logger::INFO
       parser = OptionParser.new do |opts|
@@ -33,7 +34,7 @@ class NewRelic::IA::CLI
         opts.on("-q", "--quiet",
                 "quiet output") { @log_level = Logger::ERROR }
         opts.on("-e", "--environment=ENV",
-                "use ENV section in newrelic.yml") { |e| NewRelic::Control.instance.env = e }
+                "use ENV section in newrelic.yml") { |e| @env = e }
         opts.on("--install",
                 "create a default newrelic.yml") { |e| return self.install(stdout) }
         
@@ -62,9 +63,10 @@ class NewRelic::IA::CLI
         return 1
       end
       
-      self.level = @log_level 
+      @log.level = @log_level 
       gem 'newrelic_rpm'
       require 'newrelic_rpm'
+      NewRelic::Control.instance.env = @env if @env
       NewRelic::Agent.manual_start :log => @log
       cli = new
       @aspects.each do | aspect |

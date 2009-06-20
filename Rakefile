@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'echoe'
-%w[rake rake/clean fileutils newgem rubigen].each { |f| require f }
+%w[rake rake/clean fileutils rubigen].each { |f| require f }
 require File.dirname(__FILE__) + '/lib/newrelic_ia'
 
 # Generate all the Rake tasks
@@ -14,11 +14,11 @@ Echoe.new('newrelic_ia', NewRelic::IA::VERSION) do |p|
      ['newrelic_rpm','>= 2.9.2'],
   ]
   p.development_dependencies = [
-    ['newgem', ">= #{::Newgem::VERSION}"]
+    #['newgem', ">= #{::Newgem::VERSION}"]
   ]
+  p.bin_files = 'bin/newrelic_ia'
   p.test_pattern = "spec/*.rb"
   p.ignore_pattern = "newrelic.yml"
-  p.executable_pattern = "bin/newrelic_ia"
   # p.description =
   # p.url =
   p.install_message = File.read('PostInstall.txt')

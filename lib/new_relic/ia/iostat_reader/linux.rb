@@ -22,22 +22,25 @@ module NewRelic::IA::IostatReader::Linux
   end
   def read_next
     # read up to the next header
-    line = @pipe.gets until line.chomp =~ /^$|avg-cpu/ 
-    
+    begin 
+      line = @pipe.gets.chomp
+    end until line =~ /avg-cpu/
+    line = @pipe.gets
     # Get the CPU stats
-    values             = line.split("\s")
+    values             = line.strip.split /\s+/
     user, nice, system = values.map { |v| v.to_f }
     log.debug "CPU #{user}% (user), #{system}% (system)"
-    user_cpu.record_data_point(user / 100.0)
-    system_cpu.record_data_point(system / 100.0)
+    user_cpu.record_data_point user
+    system_cpu.record_data_point system
     # skip two lines
     @pipe.gets
     @pipe.gets
     # Iterate over each disk's stats
     @disk_count.times do | disk_number |
-      values = @pipe.gets.split("\s")
+      line = @pipe.gets.chomp.strip
+      values = line.split /\s+/
       usage = values[5].to_f + values[6].to_f
-      log.debug "Disk #{values[0]}: #{usage}kb"
+      log.debug "Disk #{values[0]}: #{usage}kb (processed '#{values.inspect}'"
       io_stats.record_data_point usage
     end
   end

@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.email = %q{bkayser@newrelic.com}
   s.executables = ["newrelic_ia"]
   s.extra_rdoc_files = ["bin/newrelic_ia", "CHANGELOG", "lib/new_relic/ia/cli.rb", "lib/new_relic/ia/disk_sampler.rb", "lib/new_relic/ia/iostat_reader/linux.rb", "lib/new_relic/ia/iostat_reader/osx.rb", "lib/new_relic/ia/iostat_reader.rb", "lib/new_relic/ia/metric_names.rb", "lib/new_relic/ia/newrelic.yml", "lib/newrelic_ia.rb", "README.rdoc", "tasks/rspec.rake"]
-  s.files = ["bin/newrelic_ia", "CHANGELOG", "lib/new_relic/ia/cli.rb", "lib/new_relic/ia/disk_sampler.rb", "lib/new_relic/ia/iostat_reader/linux.rb", "lib/new_relic/ia/iostat_reader/osx.rb", "lib/new_relic/ia/iostat_reader.rb", "lib/new_relic/ia/metric_names.rb", "lib/new_relic/ia/newrelic.yml", "lib/newrelic_ia.rb", "PostInstall.txt", "Rakefile", "README.rdoc", "script/console", "script/destroy", "script/generate", "spec/cli_spec.rb", "spec/disk_sampler_spec.rb", "spec/iostat_reader_spec.rb", "spec/spec.opts", "spec/spec_helper.rb", "tasks/rspec.rake", "Manifest", "newrelic_ia.gemspec"]
+  s.files = ["bin/newrelic_ia", "CHANGELOG", "lib/new_relic/ia/cli.rb", "lib/new_relic/ia/disk_sampler.rb", "lib/new_relic/ia/iostat_reader/linux.rb", "lib/new_relic/ia/iostat_reader/osx.rb", "lib/new_relic/ia/iostat_reader.rb", "lib/new_relic/ia/metric_names.rb", "lib/new_relic/ia/newrelic.yml", "lib/newrelic_ia.rb", "newrelic_ia.gemspec", "nr00-s00026", "PostInstall.txt", "Rakefile", "README.rdoc", "spec/cli_spec.rb", "spec/disk_sampler_spec.rb", "spec/iostat-linux.out", "spec/iostat-osx.out", "spec/iostat_reader_spec.rb", "spec/spec.opts", "spec/spec_helper.rb", "tasks/rspec.rake", "Manifest"]
   s.has_rdoc = true
   s.homepage = %q{}
   s.post_install_message = %q{
@@ -32,13 +32,10 @@ say 'newrelic' at #newrelic on freenode IRC.
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<newrelic_rpm>, [">= 2.9.2"])
-      s.add_development_dependency(%q<newgem>, [">= 1.4.1"])
     else
       s.add_dependency(%q<newrelic_rpm>, [">= 2.9.2"])
-      s.add_dependency(%q<newgem>, [">= 1.4.1"])
     end
   else
     s.add_dependency(%q<newrelic_rpm>, [">= 2.9.2"])
-    s.add_dependency(%q<newgem>, [">= 1.4.1"])
   end
 end
