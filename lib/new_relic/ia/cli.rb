@@ -66,8 +66,7 @@ class NewRelic::IA::CLI
       @log.level = @log_level 
       gem 'newrelic_rpm'
       require 'newrelic_rpm'
-      NewRelic::Control.instance.env = @env if @env
-      NewRelic::Agent.manual_start :log => @log
+      NewRelic::Agent.manual_start :log => @log, :env => @env, :enabled => true
       cli = new
       @aspects.each do | aspect |
         cli.send aspect
