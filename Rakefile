@@ -22,6 +22,7 @@ Echoe.new('newrelic_ia', NewRelic::IA::VERSION) do |p|
   # p.description =
   # p.url =
   p.install_message = File.read('PostInstall.txt')
+  p.ignore_pattern = %w[PostInstall.txt newrelic.yml]
   p.clean_pattern |= %w[**/.DS_Store tmp *.log]
   path = (p.rubyforge_name == p.name) ? p.rubyforge_name : "\#{p.rubyforge_name}/\#{p.name}"
 end
