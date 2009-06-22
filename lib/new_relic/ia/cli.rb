@@ -3,6 +3,7 @@ require 'logger'
 
 class NewRelic::IA::CLI
   
+  LOGFILE = "newrelic_ia.log"
   @log = Logger.new(STDOUT)
   
   class << self
@@ -15,7 +16,7 @@ class NewRelic::IA::CLI
     # or an exit status if not.
     def execute(stdout, arguments=[])
       @aspects = []
-      @log = Logger.new(stdout)
+      @log = Logger.new LOGFILE
       @log_level = Logger::INFO
       parser = OptionParser.new do |opts|
         opts.banner = <<-BANNER.gsub(/^ */,'')

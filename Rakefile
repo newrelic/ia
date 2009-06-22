@@ -18,7 +18,6 @@ Echoe.new('newrelic_ia', NewRelic::IA::VERSION) do |p|
   ]
   p.bin_files = 'bin/newrelic_ia'
   p.test_pattern = "spec/*.rb"
-  p.ignore_pattern = "newrelic.yml"
   # p.description =
   # p.url =
   p.install_message = File.read('PostInstall.txt')

@@ -6,13 +6,13 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 1.2") if s.respond_to? :required_rubygems_version=
   s.authors = ["Bill Kayser"]
-  s.date = %q{2009-06-20}
+  s.date = %q{2009-06-22}
   s.default_executable = %q{newrelic_ia}
   s.description = %q{Gem for sending system statistics to New Relic RPM}
   s.email = %q{bkayser@newrelic.com}
   s.executables = ["newrelic_ia"]
   s.extra_rdoc_files = ["bin/newrelic_ia", "CHANGELOG", "lib/new_relic/ia/cli.rb", "lib/new_relic/ia/disk_sampler.rb", "lib/new_relic/ia/iostat_reader/linux.rb", "lib/new_relic/ia/iostat_reader/osx.rb", "lib/new_relic/ia/iostat_reader.rb", "lib/new_relic/ia/metric_names.rb", "lib/new_relic/ia/newrelic.yml", "lib/newrelic_ia.rb", "README.rdoc", "tasks/rspec.rake"]
-  s.files = ["bin/newrelic_ia", "CHANGELOG", "lib/new_relic/ia/cli.rb", "lib/new_relic/ia/disk_sampler.rb", "lib/new_relic/ia/iostat_reader/linux.rb", "lib/new_relic/ia/iostat_reader/osx.rb", "lib/new_relic/ia/iostat_reader.rb", "lib/new_relic/ia/metric_names.rb", "lib/new_relic/ia/newrelic.yml", "lib/newrelic_ia.rb", "Manifest", "newrelic_ia.gemspec", "Rakefile", "README.rdoc", "spec/cli_spec.rb", "spec/disk_sampler_spec.rb", "spec/iostat-linux.out", "spec/iostat-osx.out", "spec/iostat_reader_spec.rb", "spec/spec.opts", "spec/spec_helper.rb", "tasks/rspec.rake"]
+  s.files = ["bin/newrelic_ia", "CHANGELOG", "lib/new_relic/ia/cli.rb", "lib/new_relic/ia/disk_sampler.rb", "lib/new_relic/ia/iostat_reader/linux.rb", "lib/new_relic/ia/iostat_reader/osx.rb", "lib/new_relic/ia/iostat_reader.rb", "lib/new_relic/ia/metric_names.rb", "lib/new_relic/ia/newrelic.yml", "lib/newrelic_ia.rb", "Manifest", "Rakefile", "README.rdoc", "spec/cli_spec.rb", "spec/disk_sampler_spec.rb", "spec/iostat-linux.out", "spec/iostat-osx.out", "spec/iostat_reader_spec.rb", "spec/spec.opts", "spec/spec_helper.rb", "tasks/rspec.rake", "newrelic_ia.gemspec"]
   s.has_rdoc = true
   s.homepage = %q{}
   s.post_install_message = %q{
