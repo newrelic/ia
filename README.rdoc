@@ -3,7 +3,9 @@
 Bare bones Gem for collecting disk, cpu and IO statistics and 
 sending them to the New Relic RPM application.
 
-* http://github.com/newrelic/ia
+This is a work in progress.  We hope to add more statistics
+to the agent as well as more useful views on the RPM site
+for viewing these metrics.
 
 == DESCRIPTION:
 
@@ -39,7 +41,8 @@ application, or create a separate working directory and run
 
     newrelic_ia --install
 
-to create a template newrelic.yml file you can use.
+to create a template newrelic.yml file you can use.  Edit this file
+and substitute your license key and app_name value.
 
 == LICENSE:
 
