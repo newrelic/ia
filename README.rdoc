@@ -33,8 +33,7 @@ to your RPM console which can be viewed with custom dashboards.
 
 == INSTALL:
 
-    sudo gem sources -a http://gems.github.com
-    sudo gem install newrelic-ia
+    sudo gem install newrelic_ia
 
 Once installed, run from the home directory of your Rails 
 application, or create a separate working directory and run

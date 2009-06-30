@@ -1,6 +1,7 @@
 /Manifest
 /newrelic.yml
 log/
+doc/
 *~
 .DS_Store
  
