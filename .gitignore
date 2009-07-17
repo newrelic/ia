@@ -4,6 +4,7 @@ log/
 doc/
 *~
 .DS_Store
+newrelic_ia.log
  
 # eclipse conf file
 .settings

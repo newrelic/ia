@@ -3,7 +3,7 @@
 # for use as a system monitor.
 #
 common: &default_settings
-  license_key: 'your licene key here'
+  license_key: 'your license key here'
   agent_enabled: true
   disable_samplers: true  
   app_name: System Monitor
