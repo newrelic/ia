@@ -29,7 +29,7 @@ class NewRelic::IA::CLI
         BANNER
         opts.separator ""
         opts.on("-a", "--all",
-                "use all available aspects") { @aspects = %w[iostat disk] }
+                "use all available aspects") { @aspects = %w[iostat disk memcached] }
         opts.on("-v", "--verbose",
                 "debug output") { @log_level = Logger::DEBUG }
         opts.on("-q", "--quiet",
@@ -89,6 +89,12 @@ class NewRelic::IA::CLI
     NewRelic::Agent.instance.stats_engine.add_harvest_sampler NewRelic::IA::DiskSampler.new    
   end
   
+  def memcached
+    self.class.log.info "Starting memcached sampler..."
+    require 'new_relic/ia/memcached_sampler'
+    NewRelic::Agent.instance.stats_engine.add_harvest_sampler NewRelic::IA::MemcachedSampler.new
+  end
+
   private 
   def self.install(stdio)
     if File.exists? "newrelic.yml"
