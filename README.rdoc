@@ -1,4 +1,4 @@
-== New Relic Infrastructure Agent
+== New Relic Memcached Agent
 
 Memcached statistics sampler collects rich set of core stats, derived stats and  stats derivatives 
 over  a set of nodes and also collects aggregates
