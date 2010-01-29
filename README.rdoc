@@ -47,9 +47,50 @@ over  a set of nodes and also collects aggregates
     spm                        Sets per minutes
     fpm                        Flushes per minutes
     epm                        Evictions per minutes
-   
+==Cutsom dashboard
+Liquid template for NewRelic custom dashboard
 
-Bare bones Gem for collecting disk, cpu and IO statistics and 
+    <div>
+        <div style="float: left; width: 50%;">
+            {% line_chart value:average_value title:'Cache Get Hit/Miss Ratios' regexp:'/System/MemcachedAgg/(Hit Ratio|Miss Ratio)' 
+           simple_tooltip:true label:segment_3 value_suffix:'%' %}
+        </div>
+        <div style="float: left; width: 50%;">
+            {% line_chart value:average_value title:'Cache Memory' regexp:'/System/MemcachedAgg/(Bytes|Free Bytes)' 
+              simple_tooltip:true label:segment_3 %}
+        </div>
+        <br style="clear: both" />
+    </div>
+    
+    <div style="padding-top: 20px">&nbsp;</div>
+    
+    <div>
+        <div style="float: left; width: 50%;">
+            {% line_chart value:average_value title:'Cache Gets' regexp:'/System/MemcachedAgg/(Hpm|Mpm)' 
+              simple_tooltip:true label:segment_3 %}
+        </div>
+        <div style="float: left; width: 50%;">
+            {% line_chart value:average_value title:'Cache Sets, Flushes, & Evictions' 
+                     regexp:'/System/MemcachedAgg/(Spm|Epm|Fpm)' simple_tooltip:true label:segment_3 %}
+        </div>
+        <br style="clear: both" />
+    </div>
+    
+    <div style="padding-top: 20px">&nbsp;</div>
+    
+    <div>
+        <div style="float: left; width: 50%;">
+        {% line_chart value:average_value title:'Active Connections' metric:'/System/MemcachedAgg/Curr Connections' 
+              simple_tooltip:true hide_legend:true %}
+        </div>
+        <div style="float: left; width: 50%;">
+        {% line_chart value:average_value title:'Cache Objects' metric:'/System/MemcachedAgg/Curr Items' 
+          simple_tooltip:true hide_legend:true %}
+        </div>
+        <br style="clear: both" />
+    </div>   
+
+Also include bare bones Gem for collecting disk, cpu and IO statistics and 
 sending them to the New Relic RPM application.
 
 This is a work in progress.  We hope to add more statistics
