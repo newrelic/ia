@@ -1,4 +1,53 @@
-= New Relic Infrastructure Agent
+== New Relic Infrastructure Agent
+
+Memcached statistics sampler collects rich set of core stats, derived stats and  stats derivatives 
+over  a set of nodes and also collects aggregates
+
+  Stats provided by memcached daemon 
+    uptime                     Number of seconds this server has been running
+    curr_items                 Current number of items stored by the server
+    total_items                Total number of items stored by this server 
+                               ever since it started
+    bytes                      Current number of bytes used by this server 
+                               to store items
+    curr_connections           Number of open connections
+    total_connections          Total number of connections opened since 
+                               the server started running
+    connection_structures      Number of connection structures allocated 
+                               by the server
+    cmd_get                    Cumulative number of retrieval requests
+    cmd_set                    Cumulative number of storage requests
+    get_hits                   Number of keys that have been requested and 
+                               found present
+    get_misses                 Number of items that have been requested 
+                               and not found
+    evictions                  Number of valid items removed from cache                                                                           
+                               to free memory for new items                                                                                       
+    bytes_read                 Total number of bytes read by this server 
+                               from network
+    bytes_written              Total number of bytes sent by this server to 
+                               network
+    limit_maxbytes             Number of bytes this server is allowed to
+                               use for storage. 
+    threads                    Number of worker threads requested.
+                                  (see doc/threads.txt)
+    
+  Derived Stats (computed stats) 
+    free_maxbytes              Number of free bytes this server has available for storage
+
+  Stats Derivatives (time derivatives of stats) 
+    hit_ratio                  Percent of keys that have been requested and 
+                               found present
+    miss_ratio                 Percent of keys that have been requested and 
+						                               found missing
+    rpm                        Requests per minutes 
+    gpm                        Gets per minutes
+    hpm                        Hits per minutes
+    mpm                        Misses per minutes
+    spm                        Sets per minutes
+    fpm                        Flushes per minutes
+    epm                        Evictions per minutes
+   
 
 Bare bones Gem for collecting disk, cpu and IO statistics and 
 sending them to the New Relic RPM application.
