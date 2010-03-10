@@ -1,7 +1,55 @@
-== New Relic Memcached Agent
+= New Relic Infrastructure Agent
 
-Memcached statistics sampler collects rich set of core stats, derived stats and  stats derivatives 
-over  a set of nodes and also collects aggregates
+Gem for collecting memcached, disk, cpu and IO statistics. 
+Collected stats are sent to the New Relic RPM application.
+
+Memcached statistics sampler collects subset of stats provided by memcached daemon. 
+In addition it computes other stats dervied from memcached stats. Also support stats
+derivatives over time to compute rate etc. 
+Specify Memcached nodes configuration in memcached-nodes.txt file under the IA agent directory
+
+
+== DESCRIPTION:
+
+Use this gem to collect statistics from a given host by running
+newrelic_ia -a as a daemon.  This will contribute System/* metrics
+to your RPM console which can be viewed with custom dashboards.
+
+== SYNOPSIS:
+
+    newrelic_ia [ options ] aspect, aspect.. 
+
+    aspect: one or more of 'iostat' or 'disk' or 'memcached' (more to come)
+
+    -a, --all                        use all available aspects
+    -v, --verbose                    debug output
+    -q, --quiet                      quiet output
+    -e, --environment=ENV            use ENV section in newrelic.yml
+        --install                    create a default newrelic.yml
+    -h, --help                       Show this help message.
+
+== REQUIREMENTS:
+
+* New Relic Agent version 2.9.2 or later
+* Gold Subscription for creating and viewing custom dashboards
+
+== INSTALL:
+
+    sudo gem install newrelic_ia
+
+Once installed, run from the home directory of your Rails 
+application, or create a separate working directory and run
+
+    newrelic_ia --install
+
+to create a template newrelic.yml file you can use.  Edit this file
+and substitute your license key and app_name value.
+
+specify memcached nodes in memcached-nodes.txt. 
+
+
+== Memcached Stats
+Memcached stats are reported for each node and also sample reports aggregated stats
 
   Stats provided by memcached daemon 
     uptime                     Number of seconds this server has been running
@@ -47,17 +95,16 @@ over  a set of nodes and also collects aggregates
     spm                        Sets per minutes
     fpm                        Flushes per minutes
     epm                        Evictions per minutes
-==Cutsom dashboard
+
+==Sample Cutsom Dashboard for dashboard
 Liquid template for NewRelic custom dashboard
 
     <div>
         <div style="float: left; width: 50%;">
-            {% line_chart value:average_value title:'Cache Get Hit/Miss Ratios' regexp:'/System/MemcachedAgg/(Hit Ratio|Miss Ratio)' 
-           simple_tooltip:true label:segment_3 value_suffix:'%' %}
+            {% line_chart value:average_value title:'Cache Miss Ratio' metric:'/System/MemcachedAgg/Miss Ratio' simple_tooltip:true label:segment_3 value_suffix:'%' %}
         </div>
         <div style="float: left; width: 50%;">
-            {% line_chart value:average_value title:'Cache Memory' regexp:'/System/MemcachedAgg/(Bytes|Free Bytes)' 
-              simple_tooltip:true label:segment_3 %}
+            {% line_chart value:average_value title:'Cache Memory' regexp:'/System/MemcachedAgg/(Bytes|Free Bytes|Limit Maxbytes)' simple_tooltip:true label:segment_3 %}
         </div>
         <br style="clear: both" />
     </div>
@@ -66,12 +113,10 @@ Liquid template for NewRelic custom dashboard
     
     <div>
         <div style="float: left; width: 50%;">
-            {% line_chart value:average_value title:'Cache Gets' regexp:'/System/MemcachedAgg/(Hpm|Mpm)' 
-              simple_tooltip:true label:segment_3 %}
+            {% line_chart value:average_value title:'Cache Gets & Sets' regexp:'/System/MemcachedAgg/(Gpm|Spm)' simple_tooltip:true label:segment_3 %}
         </div>
         <div style="float: left; width: 50%;">
-            {% line_chart value:average_value title:'Cache Sets, Flushes, & Evictions' 
-                     regexp:'/System/MemcachedAgg/(Spm|Epm|Fpm)' simple_tooltip:true label:segment_3 %}
+            {% line_chart value:average_value title:'Cache Misses, Flushes, & Evictions' regexp:'/System/MemcachedAgg/(Mpm|Epm|Fpm)' simple_tooltip:true label:segment_3 %}
         </div>
         <br style="clear: both" />
     </div>
@@ -80,58 +125,13 @@ Liquid template for NewRelic custom dashboard
     
     <div>
         <div style="float: left; width: 50%;">
-        {% line_chart value:average_value title:'Active Connections' metric:'/System/MemcachedAgg/Curr Connections' 
-              simple_tooltip:true hide_legend:true %}
+        {% line_chart value:average_value title:'Active Connections' metric:'/System/MemcachedAgg/Curr Connections' simple_tooltip:true hide_legend:true %}
         </div>
         <div style="float: left; width: 50%;">
-        {% line_chart value:average_value title:'Cache Objects' metric:'/System/MemcachedAgg/Curr Items' 
-          simple_tooltip:true hide_legend:true %}
+        {% line_chart value:average_value title:'Cache Objects' metric:'/System/MemcachedAgg/Curr Items' simple_tooltip:true hide_legend:true %}
         </div>
         <br style="clear: both" />
-    </div>   
-
-Also include bare bones Gem for collecting disk, cpu and IO statistics and 
-sending them to the New Relic RPM application.
-
-This is a work in progress.  We hope to add more statistics
-to the agent as well as more useful views on the RPM site
-for viewing these metrics.
-
-== DESCRIPTION:
-
-Use this gem to collect statistics from a given host by running
-newrelic_ia -a as a daemon.  This will contribute System/* metrics
-to your RPM console which can be viewed with custom dashboards.
-
-== SYNOPSIS:
-
-    newrelic_ia [ options ] aspect, aspect.. 
-
-    aspect: one or more of 'iostat' or 'disk' (more to come)
-
-    -a, --all                        use all available aspects
-    -v, --verbose                    debug output
-    -q, --quiet                      quiet output
-    -e, --environment=ENV            use ENV section in newrelic.yml
-        --install                    create a default newrelic.yml
-    -h, --help                       Show this help message.
-
-== REQUIREMENTS:
-
-* New Relic Agent version 2.9.2 or later
-* Gold Subscription for creating and viewing custom dashboards
-
-== INSTALL:
-
-    sudo gem install newrelic_ia
-
-Once installed, run from the home directory of your Rails 
-application, or create a separate working directory and run
-
-    newrelic_ia --install
-
-to create a template newrelic.yml file you can use.  Edit this file
-and substitute your license key and app_name value.
+    </div>
 
 == LICENSE:
 

@@ -4,7 +4,7 @@ require 'socket'
 require 'active_support'
 
 # Memcached stats sampler
-# An Hackday project
+# An IGN Hackday project
 
 class NewRelic::IA::MemcachedSampler < NewRelic::Agent::Sampler
   include NewRelic::IA::MetricNames
@@ -29,8 +29,11 @@ class NewRelic::IA::MemcachedSampler < NewRelic::Agent::Sampler
     # file with a list of mecached nodes. each line have hostname:port
      
     File.open("memcached-nodes.txt","r").each do |line|
-      NewRelic::Agent.instance.log.info "memcached host #{line}"
-      @memcached_nodes.push line.chomp
+      line.strip!
+      if !line.empty? && !line.index("#") 
+        NewRelic::Agent.instance.log.info "memcached host #{line}"
+        @memcached_nodes.push line.chomp
+      end
     end
 
   end
@@ -44,6 +47,11 @@ class NewRelic::IA::MemcachedSampler < NewRelic::Agent::Sampler
       @last_stats[hostname_port] = stats
     end
     
+    aggregate_stats
+    puts "Done with aggs"    
+  end
+  
+  def aggregate_stats
     begin
       
       aggs_stats = Hash.new   
@@ -108,11 +116,10 @@ class NewRelic::IA::MemcachedSampler < NewRelic::Agent::Sampler
          end
        end
     rescue => e
-      puts "Could not record stat: #{stat}\n #{e.backtrace.join("\n")}"
+      NewRelic::Agent.instance.log.debug "Could not record stat: #{stat}\n #{e.backtrace.join("\n")}"
     end
-
-     puts "Done with aggs"    
   end
+  
   
   #TODO send stats for down nodes
   def issue_stats(hostname_port)

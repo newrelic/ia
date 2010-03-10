@@ -106,5 +106,14 @@ class NewRelic::IA::CLI
       stdio.puts "Please add a license key to the file before starting."
       0 # normal
     end
+    if File.exists? "memcached-nodes.txt"
+      stdio.puts "A memcached-nodes.txt file already exists.  Please remove it before installing another."
+      1 # error
+    else      
+      FileUtils.copy File.join(File.dirname(__FILE__), "memcached-nodes.txt"), "."
+      stdio.puts "A memcached-nodes.txt template was copied to #{File.expand_path('.')}."
+      stdio.puts "Please add memcached nodes to monitor."
+      0 # normal
+    end
   end
 end

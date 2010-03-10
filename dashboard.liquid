@@ -1,11 +1,9 @@
 <div>
     <div style="float: left; width: 50%;">
-        {% line_chart value:average_value title:'Cache Get Hit/Miss Ratios' regexp:'/System/MemcachedAgg/(Hit Ratio|Miss Ratio)' 
-       simple_tooltip:true label:segment_3 value_suffix:'%' %}
+        {% line_chart value:average_value title:'Cache Miss Ratio' metric:'/System/MemcachedAgg/Miss Ratio' simple_tooltip:true label:segment_3 value_suffix:'%' %}
     </div>
     <div style="float: left; width: 50%;">
-        {% line_chart value:average_value title:'Cache Memory' regexp:'/System/MemcachedAgg/(Bytes|Free Bytes)' 
-          simple_tooltip:true label:segment_3 %}
+        {% line_chart value:average_value title:'Cache Memory' regexp:'/System/MemcachedAgg/(Bytes|Free Bytes|Limit Maxbytes)' simple_tooltip:true label:segment_3 %}
     </div>
     <br style="clear: both" />
 </div>
@@ -14,12 +12,10 @@
 
 <div>
     <div style="float: left; width: 50%;">
-        {% line_chart value:average_value title:'Cache Gets' regexp:'/System/MemcachedAgg/(Hpm|Mpm)' 
-          simple_tooltip:true label:segment_3 %}
+        {% line_chart value:average_value title:'Cache Gets & Sets' regexp:'/System/MemcachedAgg/(Gpm|Spm)' simple_tooltip:true label:segment_3 %}
     </div>
     <div style="float: left; width: 50%;">
-        {% line_chart value:average_value title:'Cache Sets, Flushes, & Evictions' 
-                 regexp:'/System/MemcachedAgg/(Spm|Epm|Fpm)' simple_tooltip:true label:segment_3 %}
+        {% line_chart value:average_value title:'Cache Misses, Flushes, & Evictions' regexp:'/System/MemcachedAgg/(Mpm|Epm|Fpm)' simple_tooltip:true label:segment_3 %}
     </div>
     <br style="clear: both" />
 </div>
@@ -28,12 +24,10 @@
 
 <div>
     <div style="float: left; width: 50%;">
-    {% line_chart value:average_value title:'Active Connections' metric:'/System/MemcachedAgg/Curr Connections' 
-          simple_tooltip:true hide_legend:true %}
+    {% line_chart value:average_value title:'Active Connections' metric:'/System/MemcachedAgg/Curr Connections' simple_tooltip:true hide_legend:true %}
     </div>
     <div style="float: left; width: 50%;">
-    {% line_chart value:average_value title:'Cache Objects' metric:'/System/MemcachedAgg/Curr Items' 
-      simple_tooltip:true hide_legend:true %}
+    {% line_chart value:average_value title:'Cache Objects' metric:'/System/MemcachedAgg/Curr Items' simple_tooltip:true hide_legend:true %}
     </div>
     <br style="clear: both" />
 </div>
