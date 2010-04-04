@@ -27,13 +27,19 @@ class NewRelic::IA::MemcachedSampler < NewRelic::Agent::Sampler
     @memcached_nodes = []
     stats_engine = NewRelic::Agent.instance.stats_engine
     # file with a list of mecached nodes. each line have hostname:port
-     
-    File.open("memcached-nodes.txt","r").each do |line|
-      line.strip!
-      if !line.empty? && !line.index("#") 
-        NewRelic::Agent.instance.log.info "memcached host #{line}"
-        @memcached_nodes.push line.chomp
+    
+    mecachched_config = "memcached-nodes.txt"
+
+    if File.exist? mecachched_config
+      File.open(mecachched_config,"r").each do |line|
+        line.strip!
+        if !line.empty? && !line.index("#") 
+          NewRelic::Agent.instance.log.info "memcached host #{line}"
+          @memcached_nodes.push line.chomp
+        end
       end
+    else
+      NewRelic::Agent.instance.log.info "memcached-nodes.txt not found"
     end
 
   end
@@ -42,13 +48,15 @@ class NewRelic::IA::MemcachedSampler < NewRelic::Agent::Sampler
   # on how you add the sampler to the stats engine.
   # It pings each host in the array 'memcached_nodes'
   def poll
-    @memcached_nodes.each do | hostname_port |
-      stats = issue_stats hostname_port
-      @last_stats[hostname_port] = stats
+    unless @memcached_nodes.empty?
+      @memcached_nodes.each do | hostname_port |
+        stats = issue_stats hostname_port
+        @last_stats[hostname_port] = stats
+      end
+
+      aggregate_stats
+      NewRelic::Agent.instance.log.debug "Done with aggs"    
     end
-    
-    aggregate_stats
-    puts "Done with aggs"    
   end
   
   def aggregate_stats
@@ -86,7 +94,6 @@ class NewRelic::IA::MemcachedSampler < NewRelic::Agent::Sampler
       end
 
       @int_values.each do |stat| 
-        puts "recording /System/MemcachedAgg/#{stat.to_s.titleize} = #{aggs_stats[stat]}"
         NewRelic::Agent.instance.log.debug "recording /System/MemcachedAgg/#{stat.to_s.titleize} = #{aggs_stats[stat]}"
          begin
            stats_engine.get_stats("/System/MemcachedAgg/#{stat.to_s.titleize}", false).record_data_point(aggs_stats[stat])
@@ -96,7 +103,6 @@ class NewRelic::IA::MemcachedSampler < NewRelic::Agent::Sampler
        end
       
        @derived_values.each do |stat| 
-         puts "recording /System/MemcachedAgg/#{stat.to_s.titleize} = #{aggs_stats[stat]}"
          NewRelic::Agent.instance.log.debug "recording /System/MemcachedAgg/#{stat.to_s.titleize} = #{aggs_stats[stat]}"
          begin
            stats_engine.get_stats("/System/MemcachedAgg/#{stat.to_s.titleize}", false).record_data_point(aggs_stats[stat])
@@ -106,7 +112,6 @@ class NewRelic::IA::MemcachedSampler < NewRelic::Agent::Sampler
        end
        if aggs_count > 0
          @derivatives.each do |stat|
-           puts "recording /System/MemcachedAgg/#{stat.to_s.titleize} = #{aggs_stats[stat].to_i}"
            NewRelic::Agent.instance.log.debug "recording /System/MemcachedAgg/#{stat.to_s.titleize} = #{aggs_stats[stat].to_i}"
            begin
              stats_engine.get_stats("/System/MemcachedAgg/#{stat.to_s.titleize}", false).record_data_point(aggs_stats[stat].to_i)
@@ -151,10 +156,8 @@ class NewRelic::IA::MemcachedSampler < NewRelic::Agent::Sampler
       end
     rescue IOError, SystemCallError => e
       NewRelic::Agent.instance.log.info "Unable to connect to memcached node at #{hostname_port}"
-      unless e.instance_of? IgnoreSilentlyException
-        NewRelic::Agent.instance.log.error e.message
-        NewRelic::Agent.instance.log.debug e.backtrace.join("\n")
-      end
+      NewRelic::Agent.instance.log.error e.message
+      NewRelic::Agent.instance.log.debug e.backtrace.join("\n")
       return
     ensure
       socket.close if socket
@@ -270,9 +273,7 @@ class NewRelic::IA::MemcachedSampler < NewRelic::Agent::Sampler
       end
     end
     if previous_stats
-      @derivatives.each do |stat|
-        puts "recording /System/Memcached/#{hostname_port}/#{stat.to_s.titleize} = #{stats[stat].to_i}"
-        
+      @derivatives.each do |stat|        
         NewRelic::Agent.instance.log.debug "recording /System/Memcached/#{hostname_port}/#{stat.to_s.titleize} = #{stats[stat].to_i}"
         begin
           stats_engine.get_stats("/System/Memcached/#{hostname_port}/#{stat.to_s.titleize}", false).record_data_point(stats[stat].to_i)
@@ -291,7 +292,6 @@ class NewRelic::IA::MemcachedSampler < NewRelic::Agent::Sampler
     #   end
     # end
     NewRelic::Agent.instance.log.debug "Done with record data"
-    puts "Done with record data"
     return stats
   end
 end
