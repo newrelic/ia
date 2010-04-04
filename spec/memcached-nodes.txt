@@ -1,0 +1,4 @@
+#uncomment the lines below and specify host and port 
+
+localhost:11211
+#localhost:11211

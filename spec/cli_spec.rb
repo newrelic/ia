@@ -2,6 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 require 'new_relic/ia/cli'
 require 'new_relic/ia/iostat_reader'
 require 'new_relic/ia/disk_sampler'
+require 'new_relic/ia/memcached_sampler'
 describe NewRelic::IA::CLI, "execute" do
   before(:each) do
     @stdout_io = StringIO.new
@@ -25,6 +26,11 @@ describe NewRelic::IA::CLI, "execute" do
   it "should start disk" do
     NewRelic::Agent::StatsEngine.any_instance.expects(:add_harvest_sampler)
     stat = NewRelic::IA::CLI.execute(@stdout_io, [ "disk"])
+    stat.should == nil
+  end
+  it "should start memcached" do
+    NewRelic::Agent::StatsEngine.any_instance.expects(:add_harvest_sampler)
+    stat = NewRelic::IA::CLI.execute(@stdout_io, [ "memcached"])
     stat.should == nil
   end
   it "should override the env" do

@@ -1,0 +1,24 @@
+STAT pid 14109
+STAT uptime 5616278
+STAT time 1270358085
+STAT version 1.2.6
+STAT pointer_size 64
+STAT rusage_user 2311.216442
+STAT rusage_system 6675.001161
+STAT curr_items 643807
+STAT total_items 651490771
+STAT bytes 2896024756
+STAT curr_connections 47
+STAT total_connections 2449591
+STAT connection_structures 1878
+STAT cmd_get 732073179
+STAT cmd_set 672331163
+STAT get_hits 686458260
+STAT get_misses 45614919
+STAT evictions 25291211
+STAT bytes_read 2349066138990
+STAT bytes_written 6488057125567
+STAT limit_maxbytes 3221225472
+STAT threads 4
+END
+
