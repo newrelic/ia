@@ -1,7 +1,7 @@
 require 'rubygems'
-require 'echoe'
-%w[rake rake/clean fileutils rubigen].each { |f| require f }
-require File.dirname(__FILE__) + '/lib/newrelic_ia'
+require 'rake'
+require File.dirname(__FILE__) + '/lib/new_relic/ia/version.rb'
+require 'rake/testtask'
 
 GEM_NAME = "newrelic_ia"
 GEM_VERSION = NewRelic::IA::VERSION
@@ -14,30 +14,65 @@ The New Relic Infrastructure Agent (IA) collects system metrics and transmits
 them to the RPM server where they can be viewed with custom dashboards.
 EOF
 
-# Generate all the Rake tasks
-# Run 'rake -T' to see list of generated tasks (from gem root directory)
-Echoe.new('newrelic_ia', NewRelic::IA::VERSION) do |p|
-  p.author = AUTHOR
-  p.email = EMAIL
-  p.summary = SUMMARY
-  p.description = DESCRIPTION
-  p.url = HOMEPAGE
-  p.project = 'newrelic'
-  p.need_tar_gz = false
-  p.need_gem = true
-  p.runtime_dependencies = [
-     ['newrelic_rpm','>= 2.9.2'],
-  ]
-  p.development_dependencies = [
-    #['newgem', ">= #{::Newgem::VERSION}"]
-  ]
-  p.bin_files = 'bin/newrelic_ia'
-  p.test_pattern = "spec/*.rb"
-  p.install_message = File.read('PostInstall.txt')
-  p.ignore_pattern = %w[PostInstall.txt newrelic.yml]
-  p.clean_pattern |= %w[**/.DS_Store tmp *.log]
-#  path = (p.rubyforge_name == p.name) ? p.rubyforge_name : "\#{p.rubyforge_name}/\#{p.name}"
+# See http://www.rubygems.org/read/chapter/20 
+begin
+  require 'jeweler'
+  Jeweler::Tasks.new do |gem|
+    gem.name = GEM_NAME
+    gem.summary = SUMMARY
+    gem.description = DESCRIPTION
+    gem.email = EMAIL
+    gem.homepage = HOMEPAGE
+    gem.author = AUTHOR
+    gem.version = GEM_VERSION
+    gem.files = FileList['Rakefile', 'README*', 'CHANGELOG', 'spec/**/*','tasks/*', 'lib/**/*'].to_a
+    gem.test_files = FileList['spec/**/*.rb']
+    gem.rdoc_options << "--line-numbers" << "--inline-source" << "--title" << "New Relic RPM"
+    gem.files.reject! { |fn| fn =~ /PostInstall.txt|pkg\/|rdoc\// }
+    gem.extra_rdoc_files = %w[CHANGELOG LICENSE]
+    gem.add_dependency 'newrelic_rpm', '2.11.1'
+    gem.post_install_message = File.read 'PostInstall.txt'
+  end
+  Jeweler::GemcutterTasks.new
+rescue LoadError
+  puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
 end
 
-Dir['tasks/**/*.rake'].each { |t| load t }
+load "#{File.dirname(__FILE__)}/tasks/rspec.rake"
 
+task :manifest do
+  puts "Manifest task is no longer used since switching to jeweler."
+end
+
+begin
+  require 'rcov/rcovtask'
+  Rcov::RcovTask.new do |test|
+    test.libs << 'test'
+    test.pattern = 'spec/**/*.rb'
+    test.verbose = true
+  end
+rescue LoadError
+  task :rcov do
+    abort "RCov is not available. In order to run rcov, you must: sudo gem install spicycode-rcov"
+  end
+end
+
+require 'spec/rake/spectask'
+Spec::Rake::SpecTask.new(:spec) do |spec|
+  spec.libs << 'lib' << 'spec'
+  spec.spec_files = FileList['spec/**/*_spec.rb']
+end
+
+task :spec => :check_dependencies
+
+task :default => :spec
+
+require 'rake/rdoctask'
+Rake::RDocTask.new do |rdoc|
+  rdoc.rdoc_dir = 'rdoc'
+  rdoc.title = SUMMARY
+  rdoc.rdoc_files.include('LICENSE')
+  rdoc.rdoc_files.include('README*')
+  rdoc.rdoc_files.include('CHANGELOG')
+  rdoc.rdoc_files.include('lib/**/*.rb')
+end

@@ -7,10 +7,6 @@ require 'rubygems'
 # Default is 'monitor'
 # ENV['RUBY_ENV']  = 'production'
 
-module NewRelic
-  module IA
-    VERSION = '0.1.0'
-  end
-end
+require 'new_relic/ia/version.rb'
 
 gem 'newrelic_rpm'
