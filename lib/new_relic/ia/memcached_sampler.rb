@@ -30,20 +30,11 @@ class NewRelic::IA::MemcachedSampler < NewRelic::Agent::Sampler
   
   def parse_config
     # file with a list of mecached nodes. each line have hostname:port
-    memcached_nodes = []
-    mecachched_config = "memcached-nodes.txt"
-    if File.exist? mecachched_config
-      File.open(mecachched_config,"r").each do |line|
-        line.strip!
-        if !line.empty? && !line.index("#") 
-          logger.info "memcached host #{line}"
-          memcached_nodes.push line.chomp
-        end
-      end
-    else
-      logger.info "memcached-nodes.txt not found"
-    end   
-    return memcached_nodes 
+    memcached_nodes = NewRelic::Control.instance['memcached_nodes']
+    if !memcached_nodes.is_a? Array || memcached_nodes.empty?
+      raise NewRelic::IA::InitError, "No memcache_nodes array found in newrelic.yml."
+    end
+    memcached_nodes
   end
 
   def memcached_nodes
