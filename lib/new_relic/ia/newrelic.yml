@@ -5,15 +5,11 @@
 # <%= generated_for_user %>
 #
 common: &default_settings
-  log_level: debug
+  log_level: info
   license_key: '<%= license_key %>'
-  agent_enabled: true
-  disable_samplers: true  
+
   app_name: System Monitor
   ssl: false
-  capture_params: false
-  transaction_tracer:
-    enabled: false
 
   # Set the array of nodes for the memcache monitor
   memcached_nodes:
@@ -21,15 +17,19 @@ common: &default_settings
 #   - localhost:11212
 #   - localhost:11213
 
+  # These settings ensure we don't end up actually monitoring
+  # the IA agent itself--we aren't really interested in that.
+  # Don't change these.
+  disable_samplers: true  
+  capture_params: false
+  transaction_tracer:
+    enabled: false
+
 # NOTE if your application has other named environments, you should
 # provide newrelic conifguration settings for these enviromnents here.
 production:
   <<: *default_settings
-  enabled: true
 
 development:
   <<: *default_settings
-  # turn off communication to RPM service in development mode.
-  # NOTE: for initial evaluation purposes, you may want to temporarily turn
-  # the agent on in development mode.
-  enabled: false
+
