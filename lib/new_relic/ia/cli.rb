@@ -8,23 +8,24 @@ module NewRelic::IA
   class CLI
     
     LOGFILE = "newrelic_ia.log"
-    @log = Logger.new(STDOUT)
     
     class << self
-      attr_accessor :log
+      
+      def log
+        @log ||= Logger.new LOGFILE
+      end
+      
       def level= l
-        @log.level = l      
+        log.level = l
       end
       
       # Run the command line args.  Return nil if running
       # or an exit status if not.
       def execute(stdout, arguments=[])
         @aspects = []
-        @log = Logger.new LOGFILE
-        @log_level = Logger::INFO
         parser = OptionParser.new do |opts|
           opts.banner = <<-BANNER.gsub(/^ */,'')
-
+          New Relic Infrastructure Agent (IA) version #{NewRelic::IA::VERSION}
           Monitor different aspects of your environment with New Relic RPM.  
 
           Usage: #{File.basename($0)} [ options ] aspect, aspect.. 
@@ -35,13 +36,13 @@ module NewRelic::IA
           opts.on("-a", "--all",
                   "use all available aspects") { @aspects = %w[iostat disk memcached] }
           opts.on("-v", "--verbose",
-                  "debug output") { @log_level = Logger::DEBUG }
+                  "debug output") { NewRelic::IA::CLI.log.level = Logger::DEBUG }
           opts.on("-q", "--quiet",
-                  "quiet output") { @log_level = Logger::ERROR }
+                  "quiet output") { NewRelic::IA::CLI.log.level = Logger::ERROR }
           opts.on("-e", "--environment=ENV",
                   "use ENV section in newrelic.yml") { |e| @env = e }
           opts.on("--install",
-                  "create a default newrelic.yml") { |e| return self.install }
+                  "create a default newrelic.yml") { |e| return self.install(stdout) }
           
           opts.on("-h", "--help",
                   "Show this help message.") { stdout.puts "#{opts}\n"; return 0 }
@@ -67,11 +68,12 @@ module NewRelic::IA
           stdout.puts parser
           return 1
         end
-        
-        @log.level = @log_level 
-        gem 'newrelic_rpm'
-        require 'newrelic_rpm'
-        NewRelic::Agent.manual_start :log => @log, :env => @env, :enabled => true
+        require_newrelic_rpm        
+        NewRelic::Agent.manual_start  :env => @env, :monitor_mode => true, :log => self.log
+        # connected? due in a future version
+        if not (NewRelic::Agent.instance.connected? rescue true)
+          raise InitError, "Unable to connect to RPM server.  Agent not started."
+        end
         cli = new
         @aspects.each do | aspect |
           cli.send aspect
@@ -98,23 +100,18 @@ module NewRelic::IA
     end
     
     def memcached
-      self.class.log.info "Starting memcached sampler..."
       require 'new_relic/ia/memcached_sampler'
-      NewRelic::Agent.instance.stats_engine.add_harvest_sampler NewRelic::IA::MemcachedSampler.new
+      s = NewRelic::IA::MemcachedSampler.new
+      s.check
+      NewRelic::Agent.instance.stats_engine.add_harvest_sampler s
     end
 
     private
     
-    def self.install
-      require 'new_relic/command.rb'
-      cmd = NewRelic::Command::Install.new \
-      :src_file => File.join(File.dirname(__FILE__), "newrelic.yml"),
-      :generated_for_user => "Generated on #{Time.now.strftime('%b %d, %Y')}, from version #{NewRelic::IA::VERSION}"
-      cmd.run 
-      0 # normal
-    rescue NewRelic::Command::CommandFailure => e
-      $stderr.puts e.message
-      1 # error
+    def log
+      self.class.log
+    end
+    
     def self.require_newrelic_rpm
       begin
         require 'newrelic_rpm'
@@ -130,6 +127,31 @@ module NewRelic::IA
       end
     end
     
+    def self.install stdout
+      require_newrelic_rpm
+      if NewRelic::VersionNumber.new(NewRelic::VERSION::STRING) < '2.12'
+        if File.exists? "newrelic.yml"
+          stdout.puts "A newrelic.yml file already exists.  Please remove it before installing another."
+          return 1 # error
+        else      
+          FileUtils.copy File.join(File.dirname(__FILE__), "newrelic.yml"), "."
+          stdout.puts "A newrelic.yml template was copied to #{File.expand_path('.')}."
+          stdout.puts "Please add a license key to the file before starting."
+          return 0 # normal
+        end
+      else
+        begin
+          require 'new_relic/command'
+          cmd = NewRelic::Command::Install.new \
+          :src_file => File.join(File.dirname(__FILE__), "newrelic.yml"),
+          :generated_for_user => "Generated on #{Time.now.strftime('%b %d, %Y')}, from version #{NewRelic::IA::VERSION}"
+          cmd.run 
+          0 # normal
+        rescue NewRelic::Command::CommandFailure => e
+          stdout.puts e.message
+          1 # error
+        end
+      end
     end
   end
 end
