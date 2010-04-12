@@ -5,6 +5,7 @@ describe NewRelic::IA::MemcachedSampler do
   
   before do
     #NewRelic::Agent.instance.log.level = Logger::DEBUG
+    NewRelic::Agent.reset_stats
     @sampler = NewRelic::IA::MemcachedSampler.new
     logger = Logger.new(STDOUT)
     logger.level = Logger::INFO
@@ -14,6 +15,7 @@ describe NewRelic::IA::MemcachedSampler do
     @statsengine = NewRelic::Agent::StatsEngine.new
     @sampler.stats_engine = @statsengine
     @sampler.stubs(:memcached_nodes).returns(["localhost:11211"])
+    @statsengine.clear_stats    
   end
   
   it "should parse stats" do
@@ -38,8 +40,10 @@ describe NewRelic::IA::MemcachedSampler do
 
     @sampler.stubs(:issue_stats).returns("")
     @sampler.poll
+    
     @statsengine.metrics.each do |m|
       stats = @statsengine.lookup_stat m
+      puts "#{m}: #{stats}"
       stats.call_count.should == 0
     end
   end

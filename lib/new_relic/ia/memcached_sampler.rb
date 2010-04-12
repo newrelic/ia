@@ -1,12 +1,12 @@
-require 'new_relic/agent'
 require 'new_relic/ia/metric_names'
 require 'socket'
-require 'active_support'
+#require 'active_support'
 
 # Memcached stats sampler
 # An IGN Hackday project
 
 class NewRelic::IA::MemcachedSampler < NewRelic::Agent::Sampler
+
   include NewRelic::IA::MetricNames
   case RUBY_PLATFORM 
   when /darwin/
@@ -18,13 +18,13 @@ class NewRelic::IA::MemcachedSampler < NewRelic::Agent::Sampler
   end
 
   def initialize
+    super 'memcached'
     @int_values = [ :uptime, :curr_items, :total_items, :bytes, :curr_connections, :total_connections, :connection_structures,
       :cmd_flush, :cmd_get, :cmd_set, :get_hits, :get_misses, :evictions, :bytes_read, :bytes_written, :limit_maxbytes, :threads]
     @derived_values = [ :free_bytes]
     @derivatives = [:hit_ratio, :miss_ratio, :rpm, :gpm, :hpm, :mpm, :spm, :fpm, :epm]
     
     @last_stats = Hash.new
-    stats_engine = NewRelic::Agent.instance.stats_engine
     @memcached_nodes = parse_config
   end
   
@@ -41,27 +41,36 @@ class NewRelic::IA::MemcachedSampler < NewRelic::Agent::Sampler
     @memcached_nodes
   end
   
-  # This gets called every 10 seconds, or once a minute depending
-  # on how you add the sampler to the stats engine.
-  # It pings each host in the array 'memcached_nodes'
+  # Sanity check, make sure the servers are there.
+  def check
+    down_servers = []
+    memcached_nodes.each do | hostname_port |
+      stats_text = issue_stats hostname_port       
+      down_servers << hostname_port unless stats_text
+    end
+    raise NewRelic::Agent::Sampler::Unsupported, "Servers not available: #{down_servers.join(", ")}" unless down_servers.empty?
+  end
+  
+  # This gets called once a minute in the agent worker thread.  It
+  # pings each host in the array 'memcached_nodes'
   def poll
     unless memcached_nodes.empty?
       memcached_nodes.each do | hostname_port |
-        stats_text = issue_stats hostname_port       
-        if stats_text.present?
+        stats_text = issue_stats hostname_port
+        if stats_text
           @last_stats[hostname_port] = parse_and_report_stats hostname_port, stats_text
         else
-          @last_stats[hostname_port] = {}
+          @last_stats[hostname_port] = nil #{}
         end        
       end
 
       aggregate_stats
-      logger.debug "Done with aggs"    
+      debug "done with aggs"    
     end
   end
   
   def logger 
-    NewRelic::Agent.instance.log
+    NewRelic::IA::CLI.log
   end
   
   def aggregate_stats
@@ -100,44 +109,44 @@ class NewRelic::IA::MemcachedSampler < NewRelic::Agent::Sampler
       
       if aggs_stats[:uptime] > 0 
         @int_values.each do |stat| 
-          logger.debug "recording /System/MemcachedAgg/#{stat.to_s.titleize} = #{aggs_stats[stat]}"
+          debug "recording #{MEMCACHED}/all/#{stat.to_s} = #{aggs_stats[stat]}"
            begin
-             stats_engine.get_stats("/System/MemcachedAgg/#{stat.to_s.titleize}", false).record_data_point(aggs_stats[stat])
-           rescue
-             logger.debug "Could not record stat: #{stat}\n #{e.backtrace.join("\n")}"
+             stats("#{MEMCACHED}/all/#{stat.to_s}").record_data_point(aggs_stats[stat])
+           rescue => e
+             debug "Could not record stat: #{stat}\n #{e.backtrace.join("\n")}"
            end
          end
 
          @derived_values.each do |stat| 
-           logger.debug "recording /System/MemcachedAgg/#{stat.to_s.titleize} = #{aggs_stats[stat]}"
+           debug "recording #{MEMCACHED}/all/#{stat.to_s} = #{aggs_stats[stat]}"
            begin
-             stats_engine.get_stats("/System/MemcachedAgg/#{stat.to_s.titleize}", false).record_data_point(aggs_stats[stat])
-           rescue
-             logger.debug "Could not record stat: #{stat}\n #{e.backtrace.join("\n")}"
+             stats("#{MEMCACHED}/all/#{stat.to_s}").record_data_point(aggs_stats[stat])
+           rescue => e
+             debug "Could not record stat: #{stat}\n #{e.backtrace.join("\n")}"
            end
          end
          if aggs_count > 0
            @derivatives.each do |stat|
-             logger.debug "recording /System/MemcachedAgg/#{stat.to_s.titleize} = #{aggs_stats[stat].to_i}"
+             debug "recording #{MEMCACHED}/all/#{stat.to_s} = #{aggs_stats[stat].to_i}"
              begin
-               stats_engine.get_stats("/System/MemcachedAgg/#{stat.to_s.titleize}", false).record_data_point(aggs_stats[stat].to_i)
-             rescue
-               logger.debug "Could not record stat: #{stat}\n #{e.backtrace.join("\n")}"
+               stats("#{MEMCACHED}/all/#{stat.to_s}").record_data_point(aggs_stats[stat].to_i)
+             rescue => e
+               debug "Could not record stat: #{stat}\n #{e.backtrace.join("\n")}"
              end
            end
          end
       else 
-        logger.debug "skipping aggregates since aggregate uptime is zero"        
+        debug "skipping aggregates since aggregate uptime is zero"        
       end
     rescue => e
-      logger.debug "Could not record stat: stats\n #{e.backtrace.join("\n")}"
+      debug "Could not record stat: stats\n #{e.backtrace.join("\n")}"
     end
   end
   
   
   #TODO send stats for down nodes
   def issue_stats(hostname_port)
-    logger.debug  "hostname #{hostname_port}"
+    debug  "get stats from hostname #{hostname_port}"
     begin
       split = hostname_port.split(':', 2)
       hostname = split.first
@@ -150,7 +159,6 @@ class NewRelic::IA::MemcachedSampler < NewRelic::Agent::Sampler
       # socket = UDPSocket.open
       # socket.connect(@host, @port)
       # socket.send("stats\r\n", 0, 'localhost', '11211')
-      
 
       statistics = ""
       loop do
@@ -165,14 +173,14 @@ class NewRelic::IA::MemcachedSampler < NewRelic::Agent::Sampler
         end
       end
     rescue IOError, SystemCallError => e
-      logger.info "Unable to connect to memcached node at #{hostname_port}"
-      logger.error e.message
-      logger.debug e.backtrace.join("\n")
-      return
+      NewRelic::IA::CLI.log.warn "memcached: unable to connect to memcached node at #{hostname_port}: #{e.message}"
+      logger.info "memcached: unable to connect to memcached node at #{hostname_port}"
+      logger.error "memcached: #{e.message}"
+      debug e.backtrace.join("\n")
     ensure
-      socket.close if socket
+      socket.close if socket rescue nil
     end
-    return nil
+    nil
   end
   
   def parse_stats(hostname_port, stats_text) 
@@ -180,13 +188,16 @@ class NewRelic::IA::MemcachedSampler < NewRelic::Agent::Sampler
     stats_text = stats_text[0, end_index] if end_index
     sss = stats_text.split(/\s+/)
     if sss.size % 3 != 0
-      logger.error "Unexcpected stats output from #{hostname_port}: #{stats_text}"
+      logger.error "memcached: unexcpected stats output from #{hostname_port}: #{stats_text}"
       break
     end
-    triplets = sss.in_groups_of(3)
+    triplets = []
+    while sss.any? do
+      triplets << [ sss.shift, sss.shift, sss.shift]
+    end
     stats = Hash.new
     triplets.each do |triplet| 
-      logger.debug "#{triplet[1].to_sym} = #{triplet[2]}"
+      debug "#{triplet[1].to_sym} = #{triplet[2]}"
       stats[triplet[1].to_sym] = triplet[2]
     end
     return stats
@@ -253,7 +264,6 @@ class NewRelic::IA::MemcachedSampler < NewRelic::Agent::Sampler
     if previous_stats
       tn = stats[:time]
       tm = previous_stats[:time] 
-      
       previous_r = previous_stats[:cmd_get] + previous_stats[:cmd_set]+ previous_stats[:cmd_flush]
       current_r = stats[:cmd_get] + stats[:cmd_set]+ stats[:cmd_flush]
        
@@ -265,51 +275,66 @@ class NewRelic::IA::MemcachedSampler < NewRelic::Agent::Sampler
       stats[:hpm] = (stats[:get_hits] - previous_stats[:get_hits]) / (tn - tm) * 60
       stats[:mpm] = (stats[:get_misses] - previous_stats[:get_misses]) / (tn - tm) * 60
       stats[:epm] = (stats[:evictions] - previous_stats[:evictions]) / (tn - tm) * 60
-      stats[:hit_ratio] = stats[:hpm] / (stats[:hpm]+stats[:mpm])*100
-      stats[:miss_ratio] = stats[:mpm] / (stats[:hpm]+stats[:mpm])*100
+      if stats[:hpm] + stats[:mpm] > 0
+        stats[:hit_ratio] = stats[:hpm] / (stats[:hpm]+stats[:mpm])*100
+        stats[:miss_ratio] = stats[:mpm] / (stats[:hpm]+stats[:mpm])*100
+      else
+        stats[:hit_ratio] = 100
+        stats[:miss_ratio] = 0
+      end
     end
-    
     
     #string_values = [:version]
     #float_values = [:rusage_user, :rusage_system]
     
     @int_values.each do |stat| 
-      logger.debug "recording /System/Memcached/#{hostname_port}/#{stat.to_s.titleize} = #{stats[stat]}"
+      debug "recording #{MEMCACHED}/#{hostname_port}/#{stat.to_s} = #{stats[stat]}"
       begin
-        stats_engine.get_stats("/System/Memcached/#{hostname_port}/#{stat.to_s.titleize}", false).record_data_point(stats[stat])
-      rescue
-        logger.debug "Could not record stat: #{stat}\n #{e.backtrace.join("\n")}"
+        stats("#{MEMCACHED}/#{hostname_port}/#{stat.to_s}").record_data_point(stats[stat])
+      rescue => e
+        debug "Could not record stat: #{stat}\n #{e.backtrace.join("\n")}"
       end
     end
     @derived_values.each do |stat| 
-      logger.debug "recording /System/Memcached/#{hostname_port}/#{stat.to_s.titleize} = #{stats[stat]}"
+      debug "recording #{MEMCACHED}/#{hostname_port}/#{stat.to_s} = #{stats[stat]}"
       begin
-        stats_engine.get_stats("/System/Memcached/#{hostname_port}/#{stat.to_s.titleize}", false).record_data_point(stats[stat])
-      rescue
-        logger.debug "Could not record stat: #{stat}\n #{e.backtrace.join("\n")}"
+        stats("#{MEMCACHED}/#{hostname_port}/#{stat.to_s}").record_data_point(stats[stat])
+      rescue => e
+        debug "Could not record stat: #{stat}\n #{e.backtrace.join("\n")}"
       end
     end
     if previous_stats
-      @derivatives.each do |stat|        
-        logger.debug "recording /System/Memcached/#{hostname_port}/#{stat.to_s.titleize} = #{stats[stat].to_i}"
+      @derivatives.each do |stat|
         begin
-          stats_engine.get_stats("/System/Memcached/#{hostname_port}/#{stat.to_s.titleize}", false).record_data_point(stats[stat].to_i)
-        rescue
-          logger.debug "Could not record stat: #{stat}\n #{e.backtrace.join("\n")}"
+          value = stats[stat].to_i
+          debug "recording #{MEMCACHED}/#{hostname_port}/#{stat.to_s} = #{value}"
+          stats("#{MEMCACHED}/#{hostname_port}/#{stat.to_s}").record_data_point(value)
+        rescue => e
+          puts "Error converting #{stat} value <#{stats[stat]}> to i: #{e.message}"
+          puts "stats: #{stats.inspect}"
+          debug "Could not record stat: #{stat}\n #{e.backtrace.join("\n")}"
         end
       end
     end
 
     # float_values.each do |stat| 
-    #   logger.debug "recording /System/Memcached/#{hostname_port}/#{stat.to_s.titleize} = #{stats[stat].to_f}"
+    #   debug "recording #{MEMCACHED}/#{hostname_port}/#{stat.to_s} = #{stats[stat].to_f}"
     #   begin
-    #     stats_engine.get_stats("/System/Memcached/#{hostname_port}/#{stat.to_s.titleize}", false).record_data_point(stats[stat].to_f)
-    #   rescue
-    #     logger.debug "Could not record stat: #{stat}\n #{e.backtrace.join("\n")}"
+    #     stats("#{MEMCACHED}/#{hostname_port}/#{stat.to_s}").record_data_point(stats[stat].to_f)
+    #   rescue => e
+    #     debug "Could not record stat: #{stat}\n #{e.backtrace.join("\n")}"
     #   end
     # end
-    logger.debug "Done with record data"
+    debug "Done with record data"
     return stats
+  end
+  
+  def stats(s)
+    NewRelic::Agent.get_stats_no_scope(s)
+  end
+  
+  def debug(msg)
+    logger.debug "memcached: #{msg}"
   end
 end
 
