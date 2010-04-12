@@ -1,21 +1,13 @@
 = New Relic Infrastructure Agent
 
-Gem for collecting memcached, disk, cpu and IO statistics. 
-Collected stats are sent to the New Relic RPM application.
-
-Memcached statistics sampler collects subset of stats provided by memcached daemon. 
-In addition it computes other stats dervied from memcached stats. Also support stats
-derivatives over time to compute rate etc. 
-Specify Memcached nodes configuration in memcached-nodes.txt file under the IA agent directory
-
-
-== DESCRIPTION:
+Gem for collecting memcached, disk, cpu and IO statistics.  Collected
+stats are sent to the New Relic RPM application.
 
 Use this gem to collect statistics from a given host by running
 newrelic_ia -a as a daemon.  This will contribute System/* metrics
 to your RPM console which can be viewed with custom dashboards.
 
-== SYNOPSIS:
+== Synopsis
 
     newrelic_ia [ options ] aspect, aspect.. 
 
@@ -28,12 +20,12 @@ to your RPM console which can be viewed with custom dashboards.
         --install                    create a default newrelic.yml
     -h, --help                       Show this help message.
 
-== REQUIREMENTS:
+== Requirements
 
-* New Relic Agent version 2.9.2 or later
+* New Relic Agent version 2.10.6 or later
 * Gold Subscription for creating and viewing custom dashboards
 
-== INSTALL:
+== Install
 
     sudo gem install newrelic_ia
 
@@ -47,47 +39,51 @@ and substitute your license key and app_name value.
 
 specify memcached nodes in memcached-nodes.txt. 
 
+== Credits
 
-== Memcached Stats
+Special thanks to Chandra Patni and Tony Ford of IGN for the Memcached
+sampler.
+
+== Memcached Details
+
+Memcached statistics sampler collects subset of stats provided by
+memcached daemon, once a minute.  In addition it computes other stats
+dervied from memcached stats. Also support stats derivatives over time
+to compute rate etc.  Specify Memcached nodes configuration in the
+newrelic.yml file.
+
 Memcached stats are reported for each node and also sample reports aggregated stats
 
-  Stats provided by memcached daemon 
+=== Stats Detail
+
     uptime                     Number of seconds this server has been running
     curr_items                 Current number of items stored by the server
     total_items                Total number of items stored by this server 
                                ever since it started
-    bytes                      Current number of bytes used by this server 
-                               to store items
+    bytes                      Current number of bytes used by this server to store items
     curr_connections           Number of open connections
     total_connections          Total number of connections opened since 
                                the server started running
-    connection_structures      Number of connection structures allocated 
-                               by the server
+    connection_structures      Number of connection structures allocated by the server
     cmd_get                    Cumulative number of retrieval requests
     cmd_set                    Cumulative number of storage requests
-    get_hits                   Number of keys that have been requested and 
-                               found present
-    get_misses                 Number of items that have been requested 
-                               and not found
-    evictions                  Number of valid items removed from cache                                                                           
-                               to free memory for new items                                                                                       
-    bytes_read                 Total number of bytes read by this server 
-                               from network
-    bytes_written              Total number of bytes sent by this server to 
-                               network
-    limit_maxbytes             Number of bytes this server is allowed to
-                               use for storage. 
-    threads                    Number of worker threads requested.
-                                  (see doc/threads.txt)
+    get_hits                   Number of keys that have been requested and found present
+    get_misses                 Number of items that have been requested and not found
+    evictions                  Number of valid items removed from cache to free 
+                               memory for new items
+    bytes_read                 Total number of bytes read by this server from network
+    bytes_written              Total number of bytes sent by this server to network
+    limit_maxbytes             Number of bytes this server is allowed to use for storage
+    threads                    Number of worker threads requested
     
-  Derived Stats (computed stats) 
+Derived Stats (computed stats):
+
     free_maxbytes              Number of free bytes this server has available for storage
 
-  Stats Derivatives (time derivatives of stats) 
-    hit_ratio                  Percent of keys that have been requested and 
-                               found present
-    miss_ratio                 Percent of keys that have been requested and 
-						                               found missing
+Stats Derivatives (time derivatives of stats):
+
+    hit_ratio                  Percent of keys that have been requested and found present
+    miss_ratio                 Percent of keys that have been requested and found missing
     rpm                        Requests per minutes 
     gpm                        Gets per minutes
     hpm                        Hits per minutes
@@ -96,15 +92,17 @@ Memcached stats are reported for each node and also sample reports aggregated st
     fpm                        Flushes per minutes
     epm                        Evictions per minutes
 
-==Sample Cutsom Dashboard for dashboard
-Liquid template for NewRelic custom dashboard
+
+=== Sample Custom View
+
+Liquid template for NewRelic custom dashboard:
 
     <div>
         <div style="float: left; width: 50%;">
-            {% line_chart value:average_value title:'Cache Miss Ratio' metric:'/System/MemcachedAgg/Miss Ratio' simple_tooltip:true label:segment_3 value_suffix:'%' %}
+            {% line_chart value:average_value title:'Cache Miss Ratio' metric:'System/Memcached/Miss Ratio' simple_tooltip:true label:segment_3 value_suffix:'%' %}
         </div>
         <div style="float: left; width: 50%;">
-            {% line_chart value:average_value title:'Cache Memory' regexp:'/System/MemcachedAgg/(Bytes|Free Bytes|Limit Maxbytes)' simple_tooltip:true label:segment_3 %}
+            {% line_chart value:average_value title:'Cache Memory' regexp:'System/Memcached/(Bytes|Free Bytes|Limit Maxbytes)' simple_tooltip:true label:segment_3 %}
         </div>
         <br style="clear: both" />
     </div>
@@ -113,10 +111,10 @@ Liquid template for NewRelic custom dashboard
     
     <div>
         <div style="float: left; width: 50%;">
-            {% line_chart value:average_value title:'Cache Gets & Sets' regexp:'/System/MemcachedAgg/(Gpm|Spm)' simple_tooltip:true label:segment_3 %}
+            {% line_chart value:average_value title:'Cache Gets & Sets' regexp:'System/Memcached/(Gpm|Spm)' simple_tooltip:true label:segment_3 %}
         </div>
         <div style="float: left; width: 50%;">
-            {% line_chart value:average_value title:'Cache Misses, Flushes, & Evictions' regexp:'/System/MemcachedAgg/(Mpm|Epm|Fpm)' simple_tooltip:true label:segment_3 %}
+            {% line_chart value:average_value title:'Cache Misses, Flushes, & Evictions' regexp:'System/Memcached/(Mpm|Epm|Fpm)' simple_tooltip:true label:segment_3 %}
         </div>
         <br style="clear: both" />
     </div>
@@ -125,35 +123,11 @@ Liquid template for NewRelic custom dashboard
     
     <div>
         <div style="float: left; width: 50%;">
-        {% line_chart value:average_value title:'Active Connections' metric:'/System/MemcachedAgg/Curr Connections' simple_tooltip:true hide_legend:true %}
+        {% line_chart value:average_value title:'Active Connections' metric:'System/Memcached/Curr Connections' simple_tooltip:true hide_legend:true %}
         </div>
         <div style="float: left; width: 50%;">
-        {% line_chart value:average_value title:'Cache Objects' metric:'/System/MemcachedAgg/Curr Items' simple_tooltip:true hide_legend:true %}
+        {% line_chart value:average_value title:'Cache Objects' metric:'System/Memcached/Curr Items' simple_tooltip:true hide_legend:true %}
         </div>
         <br style="clear: both" />
     </div>
 
-== LICENSE:
-
-(The MIT License)
-
-Copyright (c) 2009-2010 Bill Kayser, Chandra Patni, Tony Ford
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-'Software'), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

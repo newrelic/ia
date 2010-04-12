@@ -27,10 +27,15 @@ begin
     gem.version = GEM_VERSION
     gem.files = FileList['Rakefile', 'README*', 'CHANGELOG', 'spec/**/*','tasks/*', 'lib/**/*'].to_a
     gem.test_files = FileList['spec/**/*.rb']
-    gem.rdoc_options << "--line-numbers" << "--inline-source" << "--title" << "New Relic RPM"
+    gem.rdoc_options <<
+      "--line-numbers" <<
+      "--inline-source" <<
+      "--title" << SUMMARY <<
+      "-m" << "README.rdoc"
+    
     gem.files.reject! { |fn| fn =~ /PostInstall.txt|pkg\/|rdoc\// }
-    gem.extra_rdoc_files = %w[CHANGELOG LICENSE]
-    gem.add_dependency 'newrelic_rpm', '2.11.1'
+    gem.extra_rdoc_files = %w[CHANGELOG LICENSE README.rdoc bin/newrelic_ia]
+    gem.add_dependency 'newrelic_rpm', '>=2.10.6'
     gem.post_install_message = File.read 'PostInstall.txt'
   end
   Jeweler::GemcutterTasks.new
@@ -69,10 +74,14 @@ task :default => :spec
 
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
-  rdoc.rdoc_dir = 'rdoc'
   rdoc.title = SUMMARY
-  rdoc.rdoc_files.include('LICENSE')
-  rdoc.rdoc_files.include('README*')
-  rdoc.rdoc_files.include('CHANGELOG')
-  rdoc.rdoc_files.include('lib/**/*.rb')
+  rdoc.main = "README.rdoc"
+  rdoc.rdoc_files << 'LICENSE' << 'README*' << 'CHANGELOG' << 'lib/**/*.rb' << 'bin/**/*'
+  rdoc.inline_source = true
+end
+
+begin
+  require 'sdoc_helpers'
+rescue LoadError
+  puts "sdoc support not enabled. Please gem install sdoc-helpers."
 end

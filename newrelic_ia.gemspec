@@ -17,7 +17,10 @@ them to the RPM server where they can be viewed with custom dashboards.
   s.email = %q{bkayser@newrelic.com}
   s.executables = ["newrelic_ia"]
   s.extra_rdoc_files = [
-    "CHANGELOG"
+    "CHANGELOG",
+     "LICENSE",
+     "README.rdoc",
+     "bin/newrelic_ia"
   ]
   s.files = [
     "CHANGELOG",
@@ -28,7 +31,6 @@ them to the RPM server where they can be viewed with custom dashboards.
      "lib/new_relic/ia/iostat_reader.rb",
      "lib/new_relic/ia/iostat_reader/linux.rb",
      "lib/new_relic/ia/iostat_reader/osx.rb",
-     "lib/new_relic/ia/memcached-nodes.txt",
      "lib/new_relic/ia/memcached_sampler.rb",
      "lib/new_relic/ia/metric_names.rb",
      "lib/new_relic/ia/newrelic.yml",
@@ -47,8 +49,9 @@ them to the RPM server where they can be viewed with custom dashboards.
   s.post_install_message = %q{
 For more information refer to http://support.newrelic.com or
 say 'newrelic' at #newrelic on freenode IRC.
+
 }
-  s.rdoc_options = ["--charset=UTF-8", "--line-numbers", "--inline-source", "--title", "New Relic RPM"]
+  s.rdoc_options = ["--charset=UTF-8", "--line-numbers", "--inline-source", "--title", "New Relic Gem for gathering system metrics", "-m", "README.rdoc"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.6}
   s.summary = %q{New Relic Gem for gathering system metrics}
@@ -64,12 +67,12 @@ say 'newrelic' at #newrelic on freenode IRC.
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<newrelic_rpm>, ["= 2.11.1"])
+      s.add_runtime_dependency(%q<newrelic_rpm>, [">= 2.10.6"])
     else
-      s.add_dependency(%q<newrelic_rpm>, ["= 2.11.1"])
+      s.add_dependency(%q<newrelic_rpm>, [">= 2.10.6"])
     end
   else
-    s.add_dependency(%q<newrelic_rpm>, ["= 2.11.1"])
+    s.add_dependency(%q<newrelic_rpm>, [">= 2.10.6"])
   end
 end
 

@@ -2,6 +2,9 @@
 /newrelic.yml
 log/
 doc/
+docs
+html/
+
 *~
 .DS_Store
 newrelic_ia.log
