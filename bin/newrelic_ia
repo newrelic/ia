@@ -3,10 +3,18 @@
 #  Created on 2009-6-15.
 #  Copyright (c) 2009. All rights reserved.
 
-require File.expand_path(File.dirname(__FILE__) + "/../lib/newrelic_ia")
-
+begin
+  require 'newrelic_ia'
+rescue LoadError
+  require 'rubygems' unless ENV['NO_RUBYGEMS']
+  begin
+    require 'newrelic_ia'
+  rescue Exception => e
+    # No gem.  Must be in development
+    require "#{File.dirname(__FILE__)}/../lib/newrelic_ia"
+  end
+end
 require "new_relic/ia/cli"
-
 status = NewRelic::IA::CLI.execute(STDOUT, ARGV)
 exit status if status
 # if execute returned nil, we are running forever:

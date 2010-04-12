@@ -115,6 +115,21 @@ module NewRelic::IA
     rescue NewRelic::Command::CommandFailure => e
       $stderr.puts e.message
       1 # error
+    def self.require_newrelic_rpm
+      begin
+        require 'newrelic_rpm'
+      rescue Exception => e
+        begin
+          require 'rubygems' unless ENV['NO_RUBYGEMS']
+          require 'newrelic_rpm'
+        rescue LoadError
+          $stderr.puts "Unable to load required gem newrelic_rpm"
+          $stderr.puts "Try `gem install newrelic_rpm`"
+          Kernel.exit 1
+        end
+      end
+    end
+    
     end
   end
 end
