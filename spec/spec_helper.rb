@@ -1,14 +1,16 @@
 begin
   require 'spec'
+  require 'newrelic_ia'
+  require 'newrelic_rpm'
 rescue LoadError
   require 'rubygems' unless ENV['NO_RUBYGEMS']
   gem 'rspec'
   require 'spec'
+  require 'newrelic_ia'
+  require 'newrelic_rpm'
 end
 
 $:.unshift(File.dirname(__FILE__) + '/../lib')
-require 'newrelic_ia'
-require 'newrelic_rpm'
 require 'new_relic/ia/cli'
 module NewRelic; TEST = true; end unless defined? NewRelic::TEST
 NewRelic::IA::CLI.level = Logger::ERROR

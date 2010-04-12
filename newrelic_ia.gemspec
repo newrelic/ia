@@ -41,6 +41,9 @@ them to the RPM server where they can be viewed with custom dashboards.
      "spec/iostat-linux.out",
      "spec/iostat-osx.out",
      "spec/iostat_reader_spec.rb",
+     "spec/memcached-1.out",
+     "spec/memcached-nodes.txt",
+     "spec/memcached_sampler_spec.rb",
      "spec/spec.opts",
      "spec/spec_helper.rb",
      "tasks/rspec.rake"
@@ -59,6 +62,7 @@ say 'newrelic' at #newrelic on freenode IRC.
     "spec/cli_spec.rb",
      "spec/disk_sampler_spec.rb",
      "spec/iostat_reader_spec.rb",
+     "spec/memcached_sampler_spec.rb",
      "spec/spec_helper.rb"
   ]
 
