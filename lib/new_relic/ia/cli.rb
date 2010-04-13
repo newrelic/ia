@@ -23,6 +23,7 @@ module NewRelic::IA
       # Run the command line args.  Return nil if running
       # or an exit status if not.
       def execute(stdout, arguments=[])
+        log.level = Logger::INFO
         @aspects = []
         parser = OptionParser.new do |opts|
           opts.banner = <<-BANNER.gsub(/^ */,'')

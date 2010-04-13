@@ -99,22 +99,10 @@ Liquid template for NewRelic custom dashboard:
 
     <div>
         <div style="float: left; width: 50%;">
-            {% line_chart value:average_value title:'Cache Miss Ratio' metric:'System/Memcached/Miss Ratio' simple_tooltip:true label:segment_3 value_suffix:'%' %}
+            {% line_chart value:average_value title:'Cache Miss Ratio' metric:'System/Memcached/all/miss_ratio' simple_tooltip:true label:segment_3 value_suffix:'%' %}
         </div>
         <div style="float: left; width: 50%;">
-            {% line_chart value:average_value title:'Cache Memory' regexp:'System/Memcached/(Bytes|Free Bytes|Limit Maxbytes)' simple_tooltip:true label:segment_3 %}
-        </div>
-        <br style="clear: both" />
-    </div>
-    
-    <div style="padding-top: 20px">&nbsp;</div>
-    
-    <div>
-        <div style="float: left; width: 50%;">
-            {% line_chart value:average_value title:'Cache Gets & Sets' regexp:'System/Memcached/(Gpm|Spm)' simple_tooltip:true label:segment_3 %}
-        </div>
-        <div style="float: left; width: 50%;">
-            {% line_chart value:average_value title:'Cache Misses, Flushes, & Evictions' regexp:'System/Memcached/(Mpm|Epm|Fpm)' simple_tooltip:true label:segment_3 %}
+            {% line_chart value:average_value title:'Cache Memory' regexp:'System/Memcached/all/(bytes|free_bytes|limit_maxbytes)' simple_tooltip:true label:segment_3 %}
         </div>
         <br style="clear: both" />
     </div>
@@ -123,10 +111,22 @@ Liquid template for NewRelic custom dashboard:
     
     <div>
         <div style="float: left; width: 50%;">
-        {% line_chart value:average_value title:'Active Connections' metric:'System/Memcached/Curr Connections' simple_tooltip:true hide_legend:true %}
+            {% line_chart value:average_value title:'Cache Gets & Sets' regexp:'System/Memcached/all/(gpm|spm)' simple_tooltip:true label:segment_3 %}
         </div>
         <div style="float: left; width: 50%;">
-        {% line_chart value:average_value title:'Cache Objects' metric:'System/Memcached/Curr Items' simple_tooltip:true hide_legend:true %}
+            {% line_chart value:average_value title:'Cache Misses, Flushes, & Evictions' regexp:'System/Memcached/all/(mpm|epm|fpm)' simple_tooltip:true label:segment_3 %}
+        </div>
+        <br style="clear: both" />
+    </div>
+    
+    <div style="padding-top: 20px">&nbsp;</div>
+    
+    <div>
+        <div style="float: left; width: 50%;">
+        {% line_chart value:average_value title:'Active Connections' metric:'System/Memcached/all/curr_connections' simple_tooltip:true hide_legend:true %}
+        </div>
+        <div style="float: left; width: 50%;">
+        {% line_chart value:average_value title:'Cache Objects' metric:'System/Memcached/all/curr_items' simple_tooltip:true hide_legend:true %}
         </div>
         <br style="clear: both" />
     </div>
