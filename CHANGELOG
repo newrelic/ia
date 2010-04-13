@@ -1,8 +1,11 @@
+== 0.2.1 2010-04-14
+
+* Bug in --install, didn't work for REE
+
 == 0.2.0 2010-04-14
 
 * Pull in memcached instrumentation from rubyorchard/memcached_newrelic_ia
 
 == 0.1.0 2009-06-15
 
-* 1 major enhancement:
-  * Initial release
+* Initial release

@@ -1,5 +1,6 @@
 require 'optparse'
 require 'logger'
+require 'fileutils'
 
 module NewRelic::IA
 
