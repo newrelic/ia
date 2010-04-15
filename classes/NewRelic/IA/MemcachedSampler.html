@@ -1,0 +1,789 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>NewRelic::IA::MemcachedSampler</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../../../css/reset.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="../../../css/main.css" type="text/css" media="screen" />
+    <script src="../../../js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../../js/jquery-effect.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../../js/main.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+<body>     
+    <div class="banner">
+        <h1>
+            <span class="type">Class</span> 
+            NewRelic::IA::MemcachedSampler 
+            
+                <span class="parent">&lt; 
+                    
+                    NewRelic::Agent::Sampler
+                    
+                </span>
+            
+        </h1>
+        <ul class="files">
+            
+            <li><a href="../../../files/lib/new_relic/ia/memcached_sampler_rb.html">lib/new_relic/ia/memcached_sampler.rb</a></li>
+            
+        </ul>
+    </div>
+    <div id="bodyContent">
+        <div id="content">
+    
+    <div class="description">
+        <p>
+Memcached stats sampler An IGN Hackday project
+</p>
+
+    </div>
+    
+
+    
+
+    
+    
+
+    
+    
+    <div class="sectiontitle">Methods</div>
+    <dl class="methods">
+    
+        <dt>A</dt>
+        <dd>
+            <ul>
+                
+                <li><a href="#M000062">aggregate_stats</a></li>
+                
+            </ul>
+        </dd>
+    
+        <dt>C</dt>
+        <dd>
+            <ul>
+                
+                <li><a href="#M000059">check</a></li>
+                
+            </ul>
+        </dd>
+    
+        <dt>D</dt>
+        <dd>
+            <ul>
+                
+                <li><a href="#M000067">debug</a></li>
+                
+            </ul>
+        </dd>
+    
+        <dt>I</dt>
+        <dd>
+            <ul>
+                
+                <li><a href="#M000063">issue_stats</a></li>
+                
+            </ul>
+        </dd>
+    
+        <dt>L</dt>
+        <dd>
+            <ul>
+                
+                <li><a href="#M000061">logger</a></li>
+                
+            </ul>
+        </dd>
+    
+        <dt>M</dt>
+        <dd>
+            <ul>
+                
+                <li><a href="#M000058">memcached_nodes</a></li>
+                
+            </ul>
+        </dd>
+    
+        <dt>N</dt>
+        <dd>
+            <ul>
+                
+                <li><a href="#M000056">new</a></li>
+                
+            </ul>
+        </dd>
+    
+        <dt>P</dt>
+        <dd>
+            <ul>
+                
+                <li><a href="#M000065">parse_and_report_stats</a>,</li>
+                
+                <li><a href="#M000057">parse_config</a>,</li>
+                
+                <li><a href="#M000064">parse_stats</a>,</li>
+                
+                <li><a href="#M000060">poll</a></li>
+                
+            </ul>
+        </dd>
+    
+        <dt>S</dt>
+        <dd>
+            <ul>
+                
+                <li><a href="#M000066">stats</a></li>
+                
+            </ul>
+        </dd>
+    
+    </dl>
+    
+
+    
+    <div class="sectiontitle">Included Modules</div>
+    <ul>
+        
+        <li>
+            
+            <a href="../IA.html">NewRelic::IA</a>
+            
+            START:includes
+        </li>
+        
+    </ul>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+            <div class="sectiontitle">Class Public methods</div>
+            
+            <div class="method">
+                <div class="title" id="M000056">
+                    
+                    <a name="M000056"></a><b>new</b>()
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000056_source')" id="l_M000056_source">show</a>
+                        
+                        | <a href="http://github.com/newrelic/ia/blob/ef818f759e8de9b0d55a1ebb25b82067b27988db/lib/new_relic/ia/memcached_sampler.rb#L20" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000056_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/new_relic/ia/memcached_sampler.rb, line 20</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>
+    <span class="ruby-keyword kw">super</span> <span class="ruby-value str">'memcached'</span>
+    <span class="ruby-ivar">@int_values</span> = [ <span class="ruby-identifier">:uptime</span>, <span class="ruby-identifier">:curr_items</span>, <span class="ruby-identifier">:total_items</span>, <span class="ruby-identifier">:bytes</span>, <span class="ruby-identifier">:curr_connections</span>, <span class="ruby-identifier">:total_connections</span>, <span class="ruby-identifier">:connection_structures</span>,
+      <span class="ruby-identifier">:cmd_flush</span>, <span class="ruby-identifier">:cmd_get</span>, <span class="ruby-identifier">:cmd_set</span>, <span class="ruby-identifier">:get_hits</span>, <span class="ruby-identifier">:get_misses</span>, <span class="ruby-identifier">:evictions</span>, <span class="ruby-identifier">:bytes_read</span>, <span class="ruby-identifier">:bytes_written</span>, <span class="ruby-identifier">:limit_maxbytes</span>, <span class="ruby-identifier">:threads</span>]
+    <span class="ruby-ivar">@derived_values</span> = [ <span class="ruby-identifier">:free_bytes</span>]
+    <span class="ruby-ivar">@derivatives</span> = [<span class="ruby-identifier">:hit_ratio</span>, <span class="ruby-identifier">:miss_ratio</span>, <span class="ruby-identifier">:rpm</span>, <span class="ruby-identifier">:gpm</span>, <span class="ruby-identifier">:hpm</span>, <span class="ruby-identifier">:mpm</span>, <span class="ruby-identifier">:spm</span>, <span class="ruby-identifier">:fpm</span>, <span class="ruby-identifier">:epm</span>]
+    
+    <span class="ruby-ivar">@last_stats</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
+    <span class="ruby-ivar">@memcached_nodes</span> = <span class="ruby-identifier">parse_config</span>
+  <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="sectiontitle">Instance Public methods</div>
+            
+            <div class="method">
+                <div class="title" id="M000062">
+                    
+                    <a name="M000062"></a><b>aggregate_stats</b>()
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000062_source')" id="l_M000062_source">show</a>
+                        
+                        | <a href="http://github.com/newrelic/ia/blob/ef818f759e8de9b0d55a1ebb25b82067b27988db/lib/new_relic/ia/memcached_sampler.rb#L76" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000062_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/new_relic/ia/memcached_sampler.rb, line 76</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">aggregate_stats</span>
+    <span class="ruby-keyword kw">begin</span>
+      
+      <span class="ruby-identifier">aggs_stats</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>   
+      <span class="ruby-ivar">@int_values</span>.<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">metric</span><span class="ruby-operator">|</span> <span class="ruby-identifier">aggs_stats</span>[<span class="ruby-identifier">metric</span>] = <span class="ruby-value">0</span>}
+      <span class="ruby-ivar">@derived_values</span>.<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">metric</span><span class="ruby-operator">|</span> <span class="ruby-identifier">aggs_stats</span>[<span class="ruby-identifier">metric</span>] = <span class="ruby-value">0</span>}
+
+      <span class="ruby-ivar">@derivatives</span>[<span class="ruby-value">0</span>,<span class="ruby-value">2</span>].<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">metric</span><span class="ruby-operator">|</span> <span class="ruby-identifier">aggs_stats</span>[<span class="ruby-identifier">metric</span>] = <span class="ruby-value">0</span><span class="ruby-value">.0</span>}
+      <span class="ruby-ivar">@derivatives</span>[<span class="ruby-value">2</span>,<span class="ruby-ivar">@derivatives</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">-</span> <span class="ruby-value">2</span>].<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">metric</span><span class="ruby-operator">|</span> <span class="ruby-identifier">aggs_stats</span>[<span class="ruby-identifier">metric</span>] = <span class="ruby-value">0</span>}
+
+      <span class="ruby-identifier">aggs_count</span> = <span class="ruby-value">0</span>
+      <span class="ruby-ivar">@last_stats</span>.<span class="ruby-identifier">each_value</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">v</span><span class="ruby-operator">|</span>
+        <span class="ruby-ivar">@int_values</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">metric</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">aggs_stats</span>[<span class="ruby-identifier">metric</span>] <span class="ruby-operator">+=</span>  (<span class="ruby-identifier">v</span>[<span class="ruby-identifier">metric</span>] <span class="ruby-operator">||</span> <span class="ruby-value">0</span>)
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-ivar">@derived_values</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">metric</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">aggs_stats</span>[<span class="ruby-identifier">metric</span>] <span class="ruby-operator">+=</span>  (<span class="ruby-identifier">v</span>[<span class="ruby-identifier">metric</span>] <span class="ruby-operator">||</span> <span class="ruby-value">0</span>)
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">v</span>[<span class="ruby-identifier">:hit_ratio</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">v</span>[<span class="ruby-identifier">:miss_ratio</span>]
+          <span class="ruby-ivar">@derivatives</span>[<span class="ruby-value">0</span>,<span class="ruby-value">2</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">metric</span><span class="ruby-operator">|</span>
+            <span class="ruby-identifier">aggs_stats</span>[<span class="ruby-identifier">metric</span>] <span class="ruby-operator">+=</span>  <span class="ruby-identifier">v</span>[<span class="ruby-identifier">metric</span>]
+          <span class="ruby-keyword kw">end</span>
+          <span class="ruby-identifier">aggs_count</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> 
+
+          <span class="ruby-ivar">@derivatives</span>[<span class="ruby-value">2</span>,<span class="ruby-ivar">@derivatives</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">-</span> <span class="ruby-value">2</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">metric</span><span class="ruby-operator">|</span> 
+            <span class="ruby-identifier">aggs_stats</span>[<span class="ruby-identifier">metric</span>] <span class="ruby-operator">+=</span>  <span class="ruby-identifier">v</span>[<span class="ruby-identifier">metric</span>]
+          <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">aggs_count</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+        <span class="ruby-identifier">aggs_stats</span>[<span class="ruby-identifier">:hit_ratio</span>] = <span class="ruby-identifier">aggs_stats</span>[<span class="ruby-identifier">:hit_ratio</span>] <span class="ruby-operator">/</span><span class="ruby-identifier">aggs_count</span>
+        <span class="ruby-identifier">aggs_stats</span>[<span class="ruby-identifier">:miss_ratio</span>] = <span class="ruby-identifier">aggs_stats</span>[<span class="ruby-identifier">:miss_ratio</span>] <span class="ruby-operator">/</span><span class="ruby-identifier">aggs_count</span>
+      <span class="ruby-keyword kw">end</span>
+      
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">aggs_stats</span>[<span class="ruby-identifier">:uptime</span>] <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> 
+        <span class="ruby-ivar">@int_values</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">stat</span><span class="ruby-operator">|</span> 
+          <span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;recording #{MEMCACHED}/all/#{stat.to_s} = #{aggs_stats[stat]}&quot;</span>
+           <span class="ruby-keyword kw">begin</span>
+             <span class="ruby-identifier">stats</span>(<span class="ruby-node">&quot;#{MEMCACHED}/all/#{stat.to_s}&quot;</span>).<span class="ruby-identifier">record_data_point</span>(<span class="ruby-identifier">aggs_stats</span>[<span class="ruby-identifier">stat</span>])
+           <span class="ruby-keyword kw">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+             <span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Could not record stat: #{stat}\n #{e.backtrace.join(&quot;\n&quot;)}&quot;</span>
+           <span class="ruby-keyword kw">end</span>
+         <span class="ruby-keyword kw">end</span>
+
+         <span class="ruby-ivar">@derived_values</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">stat</span><span class="ruby-operator">|</span> 
+           <span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;recording #{MEMCACHED}/all/#{stat.to_s} = #{aggs_stats[stat]}&quot;</span>
+           <span class="ruby-keyword kw">begin</span>
+             <span class="ruby-identifier">stats</span>(<span class="ruby-node">&quot;#{MEMCACHED}/all/#{stat.to_s}&quot;</span>).<span class="ruby-identifier">record_data_point</span>(<span class="ruby-identifier">aggs_stats</span>[<span class="ruby-identifier">stat</span>])
+           <span class="ruby-keyword kw">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+             <span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Could not record stat: #{stat}\n #{e.backtrace.join(&quot;\n&quot;)}&quot;</span>
+           <span class="ruby-keyword kw">end</span>
+         <span class="ruby-keyword kw">end</span>
+         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">aggs_count</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+           <span class="ruby-ivar">@derivatives</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">stat</span><span class="ruby-operator">|</span>
+             <span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;recording #{MEMCACHED}/all/#{stat.to_s} = #{aggs_stats[stat].to_i}&quot;</span>
+             <span class="ruby-keyword kw">begin</span>
+               <span class="ruby-identifier">stats</span>(<span class="ruby-node">&quot;#{MEMCACHED}/all/#{stat.to_s}&quot;</span>).<span class="ruby-identifier">record_data_point</span>(<span class="ruby-identifier">aggs_stats</span>[<span class="ruby-identifier">stat</span>].<span class="ruby-identifier">to_i</span>)
+             <span class="ruby-keyword kw">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+               <span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Could not record stat: #{stat}\n #{e.backtrace.join(&quot;\n&quot;)}&quot;</span>
+             <span class="ruby-keyword kw">end</span>
+           <span class="ruby-keyword kw">end</span>
+         <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">else</span> 
+        <span class="ruby-identifier">debug</span> <span class="ruby-value str">&quot;skipping aggregates since aggregate uptime is zero&quot;</span>        
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+      <span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Could not record stat: stats\n #{e.backtrace.join(&quot;\n&quot;)}&quot;</span>
+    <span class="ruby-keyword kw">end</span>
+  <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000059">
+                    
+                    <a name="M000059"></a><b>check</b>()
+                    
+                </div>
+                
+                <div class="description">
+                  <p>
+Sanity check, make sure the servers are there.
+</p>
+
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000059_source')" id="l_M000059_source">show</a>
+                        
+                        | <a href="http://github.com/newrelic/ia/blob/ef818f759e8de9b0d55a1ebb25b82067b27988db/lib/new_relic/ia/memcached_sampler.rb#L45" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000059_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/new_relic/ia/memcached_sampler.rb, line 45</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">check</span>
+    <span class="ruby-identifier">down_servers</span> = []
+    <span class="ruby-identifier">memcached_nodes</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span> <span class="ruby-identifier">hostname_port</span> <span class="ruby-operator">|</span>
+      <span class="ruby-identifier">stats_text</span> = <span class="ruby-identifier">issue_stats</span> <span class="ruby-identifier">hostname_port</span>       
+      <span class="ruby-identifier">down_servers</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">hostname_port</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">stats_text</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">NewRelic</span><span class="ruby-operator">::</span><span class="ruby-constant">Agent</span><span class="ruby-operator">::</span><span class="ruby-constant">Sampler</span><span class="ruby-operator">::</span><span class="ruby-constant">Unsupported</span>, <span class="ruby-node">&quot;Servers not available: #{down_servers.join(&quot;, &quot;)}&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">down_servers</span>.<span class="ruby-identifier">empty?</span>
+  <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000067">
+                    
+                    <a name="M000067"></a><b>debug</b>(msg)
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000067_source')" id="l_M000067_source">show</a>
+                        
+                        | <a href="http://github.com/newrelic/ia/blob/ef818f759e8de9b0d55a1ebb25b82067b27988db/lib/new_relic/ia/memcached_sampler.rb#L336" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000067_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/new_relic/ia/memcached_sampler.rb, line 336</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">debug</span>(<span class="ruby-identifier">msg</span>)
+    <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;memcached: #{msg}&quot;</span>
+  <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000063">
+                    
+                    <a name="M000063"></a><b>issue_stats</b>(hostname_port)
+                    
+                </div>
+                
+                <div class="description">
+                  <p>
+TODO send stats for down nodes
+</p>
+
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000063_source')" id="l_M000063_source">show</a>
+                        
+                        | <a href="http://github.com/newrelic/ia/blob/ef818f759e8de9b0d55a1ebb25b82067b27988db/lib/new_relic/ia/memcached_sampler.rb#L148" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000063_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/new_relic/ia/memcached_sampler.rb, line 148</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">issue_stats</span>(<span class="ruby-identifier">hostname_port</span>)
+    <span class="ruby-identifier">debug</span>  <span class="ruby-node">&quot;get stats from hostname #{hostname_port}&quot;</span>
+    <span class="ruby-keyword kw">begin</span>
+      <span class="ruby-identifier">split</span> = <span class="ruby-identifier">hostname_port</span>.<span class="ruby-identifier">split</span>(<span class="ruby-value str">':'</span>, <span class="ruby-value">2</span>)
+      <span class="ruby-identifier">hostname</span> = <span class="ruby-identifier">split</span>.<span class="ruby-identifier">first</span>
+      <span class="ruby-identifier">port</span> = <span class="ruby-identifier">split</span>.<span class="ruby-identifier">last</span>
+      
+      <span class="ruby-identifier">socket</span> = <span class="ruby-constant">TCPSocket</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">hostname</span>, <span class="ruby-identifier">port</span>)
+      <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value str">&quot;stats\r\n&quot;</span>, <span class="ruby-value">0</span>)
+      
+      <span class="ruby-comment cmt"># TODO UDP or use memcached gem to use udp first and fallback to tcp</span>
+      <span class="ruby-comment cmt"># socket = UDPSocket.open</span>
+      <span class="ruby-comment cmt"># socket.connect(@host, @port)</span>
+      <span class="ruby-comment cmt"># socket.send(&quot;stats\r\n&quot;, 0, 'localhost', '11211')</span>
+
+      <span class="ruby-identifier">statistics</span> = <span class="ruby-value str">&quot;&quot;</span>
+      <span class="ruby-identifier">loop</span> <span class="ruby-keyword kw">do</span>
+        <span class="ruby-identifier">data</span> = <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">recv</span>(<span class="ruby-value">4096</span>)
+        <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">data</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">data</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+          <span class="ruby-keyword kw">break</span>
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-identifier">statistics</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">data</span>
+        <span class="ruby-identifier">end_index</span> = <span class="ruby-identifier">statistics</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp re">/\s+END\s+$/</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">end_index</span>
+          <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">statistics</span>[<span class="ruby-value">0</span>, <span class="ruby-identifier">end_index</span>]
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">IOError</span>, <span class="ruby-constant">SystemCallError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+      <span class="ruby-constant">NewRelic</span><span class="ruby-operator">::</span><span class="ruby-constant">IA</span><span class="ruby-operator">::</span><span class="ruby-constant">CLI</span>.<span class="ruby-identifier">log</span>.<span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;memcached: unable to connect to memcached node at #{hostname_port}: #{e.message}&quot;</span>
+      <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;memcached: unable to connect to memcached node at #{hostname_port}&quot;</span>
+      <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">error</span> <span class="ruby-node">&quot;memcached: #{e.message}&quot;</span>
+      <span class="ruby-identifier">debug</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">&quot;\n&quot;</span>)
+    <span class="ruby-keyword kw">ensure</span>
+      <span class="ruby-identifier">socket</span>.<span class="ruby-identifier">close</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">socket</span> <span class="ruby-keyword kw">rescue</span> <span class="ruby-keyword kw">nil</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">nil</span>
+  <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000061">
+                    
+                    <a name="M000061"></a><b>logger</b>()
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000061_source')" id="l_M000061_source">show</a>
+                        
+                        | <a href="http://github.com/newrelic/ia/blob/ef818f759e8de9b0d55a1ebb25b82067b27988db/lib/new_relic/ia/memcached_sampler.rb#L72" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000061_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/new_relic/ia/memcached_sampler.rb, line 72</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">logger</span> 
+    <span class="ruby-constant">NewRelic</span><span class="ruby-operator">::</span><span class="ruby-constant">IA</span><span class="ruby-operator">::</span><span class="ruby-constant">CLI</span>.<span class="ruby-identifier">log</span>
+  <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000058">
+                    
+                    <a name="M000058"></a><b>memcached_nodes</b>()
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000058_source')" id="l_M000058_source">show</a>
+                        
+                        | <a href="http://github.com/newrelic/ia/blob/ef818f759e8de9b0d55a1ebb25b82067b27988db/lib/new_relic/ia/memcached_sampler.rb#L40" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000058_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/new_relic/ia/memcached_sampler.rb, line 40</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">memcached_nodes</span>
+    <span class="ruby-ivar">@memcached_nodes</span>
+  <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000065">
+                    
+                    <a name="M000065"></a><b>parse_and_report_stats</b>(hostname_port, stats_text)
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000065_source')" id="l_M000065_source">show</a>
+                        
+                        | <a href="http://github.com/newrelic/ia/blob/ef818f759e8de9b0d55a1ebb25b82067b27988db/lib/new_relic/ia/memcached_sampler.rb#L206" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000065_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/new_relic/ia/memcached_sampler.rb, line 206</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">parse_and_report_stats</span>(<span class="ruby-identifier">hostname_port</span>, <span class="ruby-identifier">stats_text</span>)  
+    <span class="ruby-comment cmt"># pid = 21355</span>
+    <span class="ruby-comment cmt"># uptime = 2089</span>
+    <span class="ruby-comment cmt"># time = 1264673782</span>
+    <span class="ruby-comment cmt"># version = 1.2.8</span>
+    <span class="ruby-comment cmt"># pointer_size = 64</span>
+    <span class="ruby-comment cmt"># rusage_user = 0.020996</span>
+    <span class="ruby-comment cmt"># rusage_system = 0.020996</span>
+    <span class="ruby-comment cmt"># curr_items = 277</span>
+    <span class="ruby-comment cmt"># total_items = 356</span>
+    <span class="ruby-comment cmt"># bytes = 544955</span>
+    <span class="ruby-comment cmt"># curr_connections = 14</span>
+    <span class="ruby-comment cmt"># total_connections = 15</span>
+    <span class="ruby-comment cmt"># connection_structures = 15</span>
+    <span class="ruby-comment cmt"># cmd_flush = 0</span>
+    <span class="ruby-comment cmt"># cmd_get = 549</span>
+    <span class="ruby-comment cmt"># cmd_set = 356</span>
+    <span class="ruby-comment cmt"># get_hits = 185</span>
+    <span class="ruby-comment cmt"># get_misses = 364</span>
+    <span class="ruby-comment cmt"># evictions = 0</span>
+    <span class="ruby-comment cmt"># bytes_read = 703195</span>
+    <span class="ruby-comment cmt"># bytes_written = 344345</span>
+    <span class="ruby-comment cmt"># limit_maxbytes = 1048576000</span>
+    <span class="ruby-comment cmt"># threads = 5</span>
+    <span class="ruby-comment cmt"># accepting_conns = 1</span>
+    <span class="ruby-comment cmt"># listen_disabled_num = 0</span>
+    
+    
+    <span class="ruby-comment cmt"># average_value</span>
+    <span class="ruby-comment cmt">#     * Active Connections - free</span>
+    <span class="ruby-comment cmt">#     * Current items</span>
+    <span class="ruby-comment cmt">#     * evictions</span>
+    <span class="ruby-comment cmt">#     * Total Size (memcache stat: limit_maxbytes)</span>
+    <span class="ruby-comment cmt">#     * Used size (memcache stat: bytes)</span>
+    <span class="ruby-comment cmt"># </span>
+    <span class="ruby-comment cmt">#     need to compute during collection</span>
+    <span class="ruby-comment cmt">#     * Hit Ratio (%)</span>
+    <span class="ruby-comment cmt">#     * Requests per interval </span>
+    <span class="ruby-comment cmt">#     * Hits per interval</span>
+    <span class="ruby-comment cmt">#     * Misses per interval</span>
+    <span class="ruby-comment cmt">#     * Sets per interval</span>
+    <span class="ruby-comment cmt">#     * Free size (memcache stat: limit_maxbytes - bytes)</span>
+    <span class="ruby-comment cmt"># </span>
+    <span class="ruby-comment cmt">#     Also send all stats.</span>
+    <span class="ruby-comment cmt">#     </span>
+    <span class="ruby-comment cmt">#     </span>
+    <span class="ruby-identifier">stats</span> = <span class="ruby-identifier">parse_stats</span>(<span class="ruby-identifier">hostname_port</span>, <span class="ruby-identifier">stats_text</span>) 
+
+    <span class="ruby-comment cmt">#we store ints in the hash</span>
+    <span class="ruby-ivar">@int_values</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">stat</span><span class="ruby-operator">|</span> 
+      <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">stat</span>] = <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">stat</span>].<span class="ruby-identifier">to_i</span> 
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt">#time is not shipped to collector but we add it for derivative calculations</span>
+    <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:time</span>] = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">at</span> <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:time</span>].<span class="ruby-identifier">to_i</span> 
+
+    <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:free_bytes</span>] = <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:limit_maxbytes</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:bytes</span>]
+    
+    <span class="ruby-identifier">previous_stats</span> = <span class="ruby-ivar">@last_stats</span>[<span class="ruby-identifier">hostname_port</span>]
+    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">previous_stats</span>
+      <span class="ruby-identifier">tn</span> = <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:time</span>]
+      <span class="ruby-identifier">tm</span> = <span class="ruby-identifier">previous_stats</span>[<span class="ruby-identifier">:time</span>] 
+      <span class="ruby-identifier">previous_r</span> = <span class="ruby-identifier">previous_stats</span>[<span class="ruby-identifier">:cmd_get</span>] <span class="ruby-operator">+</span> <span class="ruby-identifier">previous_stats</span>[<span class="ruby-identifier">:cmd_set</span>]<span class="ruby-operator">+</span> <span class="ruby-identifier">previous_stats</span>[<span class="ruby-identifier">:cmd_flush</span>]
+      <span class="ruby-identifier">current_r</span> = <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:cmd_get</span>] <span class="ruby-operator">+</span> <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:cmd_set</span>]<span class="ruby-operator">+</span> <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:cmd_flush</span>]
+       
+      <span class="ruby-comment cmt">#unit per minute </span>
+      <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:rpm</span>] = (<span class="ruby-identifier">current_r</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">previous_r</span>) <span class="ruby-operator">/</span> (<span class="ruby-identifier">tn</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">tm</span>) <span class="ruby-operator">*</span> <span class="ruby-value">60</span> 
+      <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:gpm</span>] = (<span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:cmd_get</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">previous_stats</span>[<span class="ruby-identifier">:cmd_get</span>]) <span class="ruby-operator">/</span> (<span class="ruby-identifier">tn</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">tm</span>) <span class="ruby-operator">*</span> <span class="ruby-value">60</span>
+      <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:spm</span>] = (<span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:cmd_set</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">previous_stats</span>[<span class="ruby-identifier">:cmd_set</span>]) <span class="ruby-operator">/</span> (<span class="ruby-identifier">tn</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">tm</span>) <span class="ruby-operator">*</span> <span class="ruby-value">60</span>
+      <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:fpm</span>] = (<span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:cmd_flush</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">previous_stats</span>[<span class="ruby-identifier">:cmd_flush</span>]) <span class="ruby-operator">/</span> (<span class="ruby-identifier">tn</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">tm</span>) <span class="ruby-operator">*</span> <span class="ruby-value">60</span>
+      <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:hpm</span>] = (<span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:get_hits</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">previous_stats</span>[<span class="ruby-identifier">:get_hits</span>]) <span class="ruby-operator">/</span> (<span class="ruby-identifier">tn</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">tm</span>) <span class="ruby-operator">*</span> <span class="ruby-value">60</span>
+      <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:mpm</span>] = (<span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:get_misses</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">previous_stats</span>[<span class="ruby-identifier">:get_misses</span>]) <span class="ruby-operator">/</span> (<span class="ruby-identifier">tn</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">tm</span>) <span class="ruby-operator">*</span> <span class="ruby-value">60</span>
+      <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:epm</span>] = (<span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:evictions</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">previous_stats</span>[<span class="ruby-identifier">:evictions</span>]) <span class="ruby-operator">/</span> (<span class="ruby-identifier">tn</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">tm</span>) <span class="ruby-operator">*</span> <span class="ruby-value">60</span>
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:hpm</span>] <span class="ruby-operator">+</span> <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:mpm</span>] <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+        <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:hit_ratio</span>] = <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:hpm</span>] <span class="ruby-operator">/</span> (<span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:hpm</span>]<span class="ruby-operator">+</span><span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:mpm</span>])<span class="ruby-operator">*</span><span class="ruby-value">100</span>
+        <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:miss_ratio</span>] = <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:mpm</span>] <span class="ruby-operator">/</span> (<span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:hpm</span>]<span class="ruby-operator">+</span><span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:mpm</span>])<span class="ruby-operator">*</span><span class="ruby-value">100</span>
+      <span class="ruby-keyword kw">else</span>
+        <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:hit_ratio</span>] = <span class="ruby-value">100</span>
+        <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">:miss_ratio</span>] = <span class="ruby-value">0</span>
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+    
+    <span class="ruby-comment cmt">#string_values = [:version]</span>
+    <span class="ruby-comment cmt">#float_values = [:rusage_user, :rusage_system]</span>
+    
+    <span class="ruby-ivar">@int_values</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">stat</span><span class="ruby-operator">|</span> 
+      <span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;recording #{MEMCACHED}/#{hostname_port}/#{stat.to_s} = #{stats[stat]}&quot;</span>
+      <span class="ruby-keyword kw">begin</span>
+        <span class="ruby-identifier">stats</span>(<span class="ruby-node">&quot;#{MEMCACHED}/#{hostname_port}/#{stat.to_s}&quot;</span>).<span class="ruby-identifier">record_data_point</span>(<span class="ruby-identifier">stats</span>[<span class="ruby-identifier">stat</span>])
+      <span class="ruby-keyword kw">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+        <span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Could not record stat: #{stat}\n #{e.backtrace.join(&quot;\n&quot;)}&quot;</span>
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-ivar">@derived_values</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">stat</span><span class="ruby-operator">|</span> 
+      <span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;recording #{MEMCACHED}/#{hostname_port}/#{stat.to_s} = #{stats[stat]}&quot;</span>
+      <span class="ruby-keyword kw">begin</span>
+        <span class="ruby-identifier">stats</span>(<span class="ruby-node">&quot;#{MEMCACHED}/#{hostname_port}/#{stat.to_s}&quot;</span>).<span class="ruby-identifier">record_data_point</span>(<span class="ruby-identifier">stats</span>[<span class="ruby-identifier">stat</span>])
+      <span class="ruby-keyword kw">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+        <span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Could not record stat: #{stat}\n #{e.backtrace.join(&quot;\n&quot;)}&quot;</span>
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">previous_stats</span>
+      <span class="ruby-ivar">@derivatives</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">stat</span><span class="ruby-operator">|</span>
+        <span class="ruby-keyword kw">begin</span>
+          <span class="ruby-identifier">value</span> = <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">stat</span>].<span class="ruby-identifier">to_i</span>
+          <span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;recording #{MEMCACHED}/#{hostname_port}/#{stat.to_s} = #{value}&quot;</span>
+          <span class="ruby-identifier">stats</span>(<span class="ruby-node">&quot;#{MEMCACHED}/#{hostname_port}/#{stat.to_s}&quot;</span>).<span class="ruby-identifier">record_data_point</span>(<span class="ruby-identifier">value</span>)
+        <span class="ruby-keyword kw">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+          <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Error converting #{stat} value &lt;#{stats[stat]}&gt; to i: #{e.message}&quot;</span>
+          <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;stats: #{stats.inspect}&quot;</span>
+          <span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Could not record stat: #{stat}\n #{e.backtrace.join(&quot;\n&quot;)}&quot;</span>
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+
+    <span class="ruby-comment cmt"># float_values.each do |stat| </span>
+    <span class="ruby-comment cmt">#   debug &quot;recording #{MEMCACHED}/#{hostname_port}/#{stat.to_s} = #{stats[stat].to_f}&quot;</span>
+    <span class="ruby-comment cmt">#   begin</span>
+    <span class="ruby-comment cmt">#     stats(&quot;#{MEMCACHED}/#{hostname_port}/#{stat.to_s}&quot;).record_data_point(stats[stat].to_f)</span>
+    <span class="ruby-comment cmt">#   rescue =&gt; e</span>
+    <span class="ruby-comment cmt">#     debug &quot;Could not record stat: #{stat}\n #{e.backtrace.join(&quot;\n&quot;)}&quot;</span>
+    <span class="ruby-comment cmt">#   end</span>
+    <span class="ruby-comment cmt"># end</span>
+    <span class="ruby-identifier">debug</span> <span class="ruby-value str">&quot;Done with record data&quot;</span>
+    <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">stats</span>
+  <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000057">
+                    
+                    <a name="M000057"></a><b>parse_config</b>()
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000057_source')" id="l_M000057_source">show</a>
+                        
+                        | <a href="http://github.com/newrelic/ia/blob/ef818f759e8de9b0d55a1ebb25b82067b27988db/lib/new_relic/ia/memcached_sampler.rb#L31" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000057_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/new_relic/ia/memcached_sampler.rb, line 31</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">parse_config</span>
+    <span class="ruby-comment cmt"># file with a list of mecached nodes. each line have hostname:port</span>
+    <span class="ruby-identifier">memcached_nodes</span> = <span class="ruby-constant">NewRelic</span><span class="ruby-operator">::</span><span class="ruby-constant">Control</span>.<span class="ruby-identifier">instance</span>[<span class="ruby-value str">'memcached_nodes'</span>]
+    <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">memcached_nodes</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">Array</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">memcached_nodes</span>.<span class="ruby-identifier">empty?</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">NewRelic</span><span class="ruby-operator">::</span><span class="ruby-constant">IA</span><span class="ruby-operator">::</span><span class="ruby-constant">InitError</span>, <span class="ruby-value str">&quot;No memcache_nodes array found in newrelic.yml.&quot;</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-identifier">memcached_nodes</span>
+  <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000064">
+                    
+                    <a name="M000064"></a><b>parse_stats</b>(hostname_port, stats_text)
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000064_source')" id="l_M000064_source">show</a>
+                        
+                        | <a href="http://github.com/newrelic/ia/blob/ef818f759e8de9b0d55a1ebb25b82067b27988db/lib/new_relic/ia/memcached_sampler.rb#L186" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000064_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/new_relic/ia/memcached_sampler.rb, line 186</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">parse_stats</span>(<span class="ruby-identifier">hostname_port</span>, <span class="ruby-identifier">stats_text</span>) 
+    <span class="ruby-identifier">end_index</span> = <span class="ruby-identifier">stats_text</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp re">/\s+END\s+$/</span>
+    <span class="ruby-identifier">stats_text</span> = <span class="ruby-identifier">stats_text</span>[<span class="ruby-value">0</span>, <span class="ruby-identifier">end_index</span>] <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">end_index</span>
+    <span class="ruby-identifier">sss</span> = <span class="ruby-identifier">stats_text</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp re">/\s+/</span>)
+    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">sss</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">%</span> <span class="ruby-value">3</span> <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
+      <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">error</span> <span class="ruby-node">&quot;memcached: unexcpected stats output from #{hostname_port}: #{stats_text}&quot;</span>
+      <span class="ruby-keyword kw">break</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-identifier">triplets</span> = []
+    <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">sss</span>.<span class="ruby-identifier">any?</span> <span class="ruby-keyword kw">do</span>
+      <span class="ruby-identifier">triplets</span> <span class="ruby-operator">&lt;&lt;</span> [ <span class="ruby-identifier">sss</span>.<span class="ruby-identifier">shift</span>, <span class="ruby-identifier">sss</span>.<span class="ruby-identifier">shift</span>, <span class="ruby-identifier">sss</span>.<span class="ruby-identifier">shift</span>]
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-identifier">stats</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
+    <span class="ruby-identifier">triplets</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">triplet</span><span class="ruby-operator">|</span> 
+      <span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;#{triplet[1].to_sym} = #{triplet[2]}&quot;</span>
+      <span class="ruby-identifier">stats</span>[<span class="ruby-identifier">triplet</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">to_sym</span>] = <span class="ruby-identifier">triplet</span>[<span class="ruby-value">2</span>]
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">stats</span>
+  <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000060">
+                    
+                    <a name="M000060"></a><b>poll</b>()
+                    
+                </div>
+                
+                <div class="description">
+                  <p>
+This gets called once a minute in the agent worker thread. It pings each
+host in the array &#8216;<a
+href="MemcachedSampler.html#M000058">memcached_nodes</a>&#8216;
+</p>
+
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000060_source')" id="l_M000060_source">show</a>
+                        
+                        | <a href="http://github.com/newrelic/ia/blob/ef818f759e8de9b0d55a1ebb25b82067b27988db/lib/new_relic/ia/memcached_sampler.rb#L56" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000060_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/new_relic/ia/memcached_sampler.rb, line 56</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">poll</span>
+    <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">memcached_nodes</span>.<span class="ruby-identifier">empty?</span>
+      <span class="ruby-identifier">memcached_nodes</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span> <span class="ruby-identifier">hostname_port</span> <span class="ruby-operator">|</span>
+        <span class="ruby-identifier">stats_text</span> = <span class="ruby-identifier">issue_stats</span> <span class="ruby-identifier">hostname_port</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">stats_text</span>
+          <span class="ruby-ivar">@last_stats</span>[<span class="ruby-identifier">hostname_port</span>] = <span class="ruby-identifier">parse_and_report_stats</span> <span class="ruby-identifier">hostname_port</span>, <span class="ruby-identifier">stats_text</span>
+        <span class="ruby-keyword kw">else</span>
+          <span class="ruby-ivar">@last_stats</span>[<span class="ruby-identifier">hostname_port</span>] = <span class="ruby-keyword kw">nil</span> <span class="ruby-comment cmt">#{}</span>
+        <span class="ruby-keyword kw">end</span>        
+      <span class="ruby-keyword kw">end</span>
+
+      <span class="ruby-identifier">aggregate_stats</span>
+      <span class="ruby-identifier">debug</span> <span class="ruby-value str">&quot;done with aggs&quot;</span>    
+    <span class="ruby-keyword kw">end</span>
+  <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000066">
+                    
+                    <a name="M000066"></a><b>stats</b>(s)
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000066_source')" id="l_M000066_source">show</a>
+                        
+                        | <a href="http://github.com/newrelic/ia/blob/ef818f759e8de9b0d55a1ebb25b82067b27988db/lib/new_relic/ia/memcached_sampler.rb#L332" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000066_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/new_relic/ia/memcached_sampler.rb, line 332</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">stats</span>(<span class="ruby-identifier">s</span>)
+    <span class="ruby-constant">NewRelic</span><span class="ruby-operator">::</span><span class="ruby-constant">Agent</span>.<span class="ruby-identifier">get_stats_no_scope</span>(<span class="ruby-identifier">s</span>)
+  <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+</div>
+    </div>
+  </body>
+</html>    

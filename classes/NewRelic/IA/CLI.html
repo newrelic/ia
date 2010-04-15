@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>NewRelic::IA::CLI</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../../../css/reset.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="../../../css/main.css" type="text/css" media="screen" />
+    <script src="../../../js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../../js/jquery-effect.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../../js/main.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+<body>     
+    <div class="banner">
+        <h1>
+            <span class="type">Class</span> 
+            NewRelic::IA::CLI 
+            
+                <span class="parent">&lt; 
+                    
+                    Object
+                    
+                </span>
+            
+        </h1>
+        <ul class="files">
+            
+            <li><a href="../../../files/lib/new_relic/ia/cli_rb.html">lib/new_relic/ia/cli.rb</a></li>
+            
+        </ul>
+    </div>
+    <div id="bodyContent">
+        <div id="content">
+    
+
+    
+
+    
+    
+
+    
+    
+    <div class="sectiontitle">Methods</div>
+    <dl class="methods">
+    
+        <dt>D</dt>
+        <dd>
+            <ul>
+                
+                <li><a href="#M000041">disk</a></li>
+                
+            </ul>
+        </dd>
+    
+        <dt>E</dt>
+        <dd>
+            <ul>
+                
+                <li><a href="#M000036">execute</a></li>
+                
+            </ul>
+        </dd>
+    
+        <dt>L</dt>
+        <dd>
+            <ul>
+                
+                <li><a href="#M000035">level=</a>,</li>
+                
+                <li><a href="#M000034">log</a></li>
+                
+            </ul>
+        </dd>
+    
+        <dt>M</dt>
+        <dd>
+            <ul>
+                
+                <li><a href="#M000042">memcached</a></li>
+                
+            </ul>
+        </dd>
+    
+    </dl>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="sectiontitle">Constants</div>
+    <table border='0' cellpadding='5'>
+        
+        <tr valign='top'>
+            <td class="attr-name">LOGFILE</td>
+            <td>=</td>
+            <td class="attr-value">&quot;newrelic_ia.log&quot;</td>
+        </tr>
+        
+        
+    </table>
+    
+
+    
+
+    
+            <div class="sectiontitle">Class Public methods</div>
+            
+            <div class="method">
+                <div class="title" id="M000036">
+                    
+                    <a name="M000036"></a><b>execute</b>(stdout, arguments=[])
+                    
+                </div>
+                
+                <div class="description">
+                  <p>
+Run the command line args. Return nil if running or an exit status if not.
+</p>
+
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000036_source')" id="l_M000036_source">show</a>
+                        
+                        | <a href="http://github.com/newrelic/ia/blob/e8d42b9d5cbc10537f4dd0ed38d7f2d0e501d019/lib/new_relic/ia/cli.rb#L25" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000036_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/new_relic/ia/cli.rb, line 25</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">execute</span>(<span class="ruby-identifier">stdout</span>, <span class="ruby-identifier">arguments</span>=[])
+        <span class="ruby-identifier">log</span>.<span class="ruby-identifier">level</span> = <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">INFO</span>
+        <span class="ruby-ivar">@aspects</span> = []
+        <span class="ruby-identifier">parser</span> = <span class="ruby-constant">OptionParser</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">opts</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">banner</span> = <span class="ruby-value str">&quot;New Relic Infrastructure Agent (IA) version \#{NewRelic::IA::VERSION}\nMonitor different aspects of your environment with New Relic RPM.\n\nUsage: \#{File.basename($0)} [ options ] aspect, aspect..\n\naspect: one or more of 'memcached', 'iostat' or 'disk' (more to come)\n&quot;</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/^ */</span>,<span class="ruby-value str">''</span>)
+          <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">separator</span> <span class="ruby-value str">&quot;&quot;</span>
+          <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">on</span>(<span class="ruby-value str">&quot;-a&quot;</span>, <span class="ruby-value str">&quot;--all&quot;</span>,
+                  <span class="ruby-value str">&quot;use all available aspects&quot;</span>) { <span class="ruby-ivar">@aspects</span> = <span class="ruby-node">%w[iostat disk memcached]</span> }
+          <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">on</span>(<span class="ruby-value str">&quot;-v&quot;</span>, <span class="ruby-value str">&quot;--verbose&quot;</span>,
+                  <span class="ruby-value str">&quot;debug output&quot;</span>) { <span class="ruby-constant">NewRelic</span><span class="ruby-operator">::</span><span class="ruby-constant">IA</span><span class="ruby-operator">::</span><span class="ruby-constant">CLI</span>.<span class="ruby-identifier">log</span>.<span class="ruby-identifier">level</span> = <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">DEBUG</span> }
+          <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">on</span>(<span class="ruby-value str">&quot;-q&quot;</span>, <span class="ruby-value str">&quot;--quiet&quot;</span>,
+                  <span class="ruby-value str">&quot;quiet output&quot;</span>) { <span class="ruby-constant">NewRelic</span><span class="ruby-operator">::</span><span class="ruby-constant">IA</span><span class="ruby-operator">::</span><span class="ruby-constant">CLI</span>.<span class="ruby-identifier">log</span>.<span class="ruby-identifier">level</span> = <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">ERROR</span> }
+          <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">on</span>(<span class="ruby-value str">&quot;-e&quot;</span>, <span class="ruby-value str">&quot;--environment=ENV&quot;</span>,
+                  <span class="ruby-value str">&quot;use ENV section in newrelic.yml&quot;</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@env</span> = <span class="ruby-identifier">e</span> }
+          <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">on</span>(<span class="ruby-value str">&quot;--install license_key&quot;</span>,
+                  <span class="ruby-value str">&quot;create a default newrelic.yml&quot;</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">key</span><span class="ruby-operator">|</span> <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">install</span>(<span class="ruby-identifier">key</span>, <span class="ruby-identifier">stdout</span>) }
+          
+          <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">on</span>(<span class="ruby-value str">&quot;-h&quot;</span>, <span class="ruby-value str">&quot;--help&quot;</span>,
+                  <span class="ruby-value str">&quot;Show this help message.&quot;</span>) { <span class="ruby-identifier">stdout</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;#{opts}\n&quot;</span>; <span class="ruby-keyword kw">return</span> <span class="ruby-value">0</span> }
+          <span class="ruby-keyword kw">begin</span>
+            <span class="ruby-identifier">args</span> = <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">parse!</span> <span class="ruby-identifier">arguments</span>
+            <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">empty?</span>
+              <span class="ruby-ivar">@aspects</span> = <span class="ruby-identifier">args</span>
+            <span class="ruby-keyword kw">end</span>
+          <span class="ruby-keyword kw">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+            <span class="ruby-identifier">stdout</span>.<span class="ruby-identifier">puts</span> <span class="ruby-identifier">e</span>
+            <span class="ruby-identifier">stdout</span>.<span class="ruby-identifier">puts</span> <span class="ruby-identifier">opts</span>
+            <span class="ruby-keyword kw">return</span> <span class="ruby-value">1</span>
+          <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-ivar">@aspects</span>.<span class="ruby-identifier">delete_if</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">aspect</span><span class="ruby-operator">|</span>
+          <span class="ruby-keyword kw">unless</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">instance_methods</span>(<span class="ruby-keyword kw">false</span>).<span class="ruby-identifier">include?</span> <span class="ruby-identifier">aspect</span>
+            <span class="ruby-identifier">stdout</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Unknown aspect: #{aspect}&quot;</span>
+            <span class="ruby-keyword kw">true</span>
+          <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@aspects</span>.<span class="ruby-identifier">empty?</span>
+          <span class="ruby-identifier">stdout</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;No aspects specified.&quot;</span>
+          <span class="ruby-identifier">stdout</span>.<span class="ruby-identifier">puts</span> <span class="ruby-identifier">parser</span>
+          <span class="ruby-keyword kw">return</span> <span class="ruby-value">1</span>
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-identifier">require_newrelic_rpm</span>        
+        <span class="ruby-constant">NewRelic</span><span class="ruby-operator">::</span><span class="ruby-constant">Agent</span>.<span class="ruby-identifier">manual_start</span>  <span class="ruby-identifier">:env</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@env</span>, <span class="ruby-identifier">:monitor_mode</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword kw">true</span>, <span class="ruby-identifier">:log</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">log</span>
+        <span class="ruby-comment cmt"># connected? due in a future version</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">not</span> (<span class="ruby-constant">NewRelic</span><span class="ruby-operator">::</span><span class="ruby-constant">Agent</span>.<span class="ruby-identifier">instance</span>.<span class="ruby-identifier">connected?</span> <span class="ruby-keyword kw">rescue</span> <span class="ruby-keyword kw">true</span>)
+          <span class="ruby-identifier">raise</span> <span class="ruby-constant">InitError</span>, <span class="ruby-value str">&quot;Unable to connect to RPM server.  Agent not started.&quot;</span>
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-identifier">cli</span> = <span class="ruby-identifier">new</span>
+        <span class="ruby-ivar">@aspects</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span> <span class="ruby-identifier">aspect</span> <span class="ruby-operator">|</span>
+          <span class="ruby-identifier">cli</span>.<span class="ruby-identifier">send</span> <span class="ruby-identifier">aspect</span>
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">InitError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+        <span class="ruby-identifier">stdout</span>.<span class="ruby-identifier">puts</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">message</span>
+        <span class="ruby-keyword kw">return</span> <span class="ruby-value">1</span>
+      <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000035">
+                    
+                    <a name="M000035"></a><b>level=</b>(l)
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000035_source')" id="l_M000035_source">show</a>
+                        
+                        | <a href="http://github.com/newrelic/ia/blob/e8d42b9d5cbc10537f4dd0ed38d7f2d0e501d019/lib/new_relic/ia/cli.rb#L19" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000035_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/new_relic/ia/cli.rb, line 19</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">level=</span> <span class="ruby-identifier">l</span>
+        <span class="ruby-identifier">log</span>.<span class="ruby-identifier">level</span> = <span class="ruby-identifier">l</span>
+      <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000034">
+                    
+                    <a name="M000034"></a><b>log</b>()
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000034_source')" id="l_M000034_source">show</a>
+                        
+                        | <a href="http://github.com/newrelic/ia/blob/e8d42b9d5cbc10537f4dd0ed38d7f2d0e501d019/lib/new_relic/ia/cli.rb#L15" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000034_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/new_relic/ia/cli.rb, line 15</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">log</span>
+        <span class="ruby-ivar">@log</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Logger</span>.<span class="ruby-identifier">new</span> <span class="ruby-constant">LOGFILE</span>
+      <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="sectiontitle">Instance Public methods</div>
+            
+            <div class="method">
+                <div class="title" id="M000041">
+                    
+                    <a name="M000041"></a><b>disk</b>()
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000041_source')" id="l_M000041_source">show</a>
+                        
+                        | <a href="http://github.com/newrelic/ia/blob/e8d42b9d5cbc10537f4dd0ed38d7f2d0e501d019/lib/new_relic/ia/cli.rb#L99" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000041_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/new_relic/ia/cli.rb, line 99</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">disk</span>
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">log</span>.<span class="ruby-identifier">info</span> <span class="ruby-value str">&quot;Starting disk sampler...&quot;</span>
+      <span class="ruby-identifier">require</span> <span class="ruby-value str">'new_relic/ia/disk_sampler'</span>
+      <span class="ruby-constant">NewRelic</span><span class="ruby-operator">::</span><span class="ruby-constant">Agent</span>.<span class="ruby-identifier">instance</span>.<span class="ruby-identifier">stats_engine</span>.<span class="ruby-identifier">add_harvest_sampler</span> <span class="ruby-constant">NewRelic</span><span class="ruby-operator">::</span><span class="ruby-constant">IA</span><span class="ruby-operator">::</span><span class="ruby-constant">DiskSampler</span>.<span class="ruby-identifier">new</span>    
+    <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="method">
+                <div class="title" id="M000042">
+                    
+                    <a name="M000042"></a><b>memcached</b>()
+                    
+                </div>
+                
+                
+                
+                
+                <div class="sourcecode">
+                    <p class="source-link">
+                        Source: <a href="javascript:toggleSource('M000042_source')" id="l_M000042_source">show</a>
+                        
+                        | <a href="http://github.com/newrelic/ia/blob/e8d42b9d5cbc10537f4dd0ed38d7f2d0e501d019/lib/new_relic/ia/cli.rb#L105" target="_blank" class="github_url">on GitHub</a>
+                        
+                    </p>
+                    <div id="M000042_source" class="dyn-source">
+                        <pre><span class="ruby-comment cmt"># File lib/new_relic/ia/cli.rb, line 105</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">memcached</span>
+      <span class="ruby-identifier">require</span> <span class="ruby-value str">'new_relic/ia/memcached_sampler'</span>
+      <span class="ruby-identifier">s</span> = <span class="ruby-constant">NewRelic</span><span class="ruby-operator">::</span><span class="ruby-constant">IA</span><span class="ruby-operator">::</span><span class="ruby-constant">MemcachedSampler</span>.<span class="ruby-identifier">new</span>
+      <span class="ruby-identifier">s</span>.<span class="ruby-identifier">check</span>
+      <span class="ruby-constant">NewRelic</span><span class="ruby-operator">::</span><span class="ruby-constant">Agent</span>.<span class="ruby-identifier">instance</span>.<span class="ruby-identifier">stats_engine</span>.<span class="ruby-identifier">add_harvest_sampler</span> <span class="ruby-identifier">s</span>
+    <span class="ruby-keyword kw">end</span></pre>
+                    </div>
+                </div>
+                
+            </div>
+            
+</div>
+    </div>
+  </body>
+</html>    

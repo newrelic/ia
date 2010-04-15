@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>newrelic.yml</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../../../../css/reset.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="../../../../css/main.css" type="text/css" media="screen" />
+    <script src="../../../../js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../../../js/jquery-effect.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../../../js/main.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+<body>     
+    <div class="banner">
+        <h1>
+            newrelic.yml
+        </h1>
+        <ul class="files">
+            <li>lib/new_relic/ia/newrelic.yml</li>
+            <li>Last modified: Mon Apr 12 16:41:28 -0700 2010</li>
+        </ul>
+    </div>
+
+    <div id="bodyContent">
+        <div id="content">
+    
+    <div class="description">
+        <p>
+# # This is a configuration file for the RPM Agent, tailored # for use as a
+system monitor. # # <%= generated_for_user %> # common:
+&amp;default_settings
+</p>
+<pre>
+  log_level: info
+  license_key: '&lt;%= license_key %&gt;'
+
+  app_name: System Monitor
+  ssl: false
+
+  # Set the array of nodes for the memcache monitor
+  memcached_nodes:
+    - localhost:11211
+</pre>
+<p>
+# - localhost:11212 # - localhost:11213
+</p>
+<pre>
+  # These settings ensure we don't end up actually monitoring
+  # the IA agent itself--we aren't really interested in that.
+  # Don't change these.
+  disable_samplers: true
+  capture_params: false
+  transaction_tracer:
+    enabled: false
+</pre>
+<p>
+# NOTE if your application has other named environments, you should #
+provide newrelic conifguration settings for these enviromnents here.
+production:
+</p>
+<pre>
+  &lt;&lt;: *default_settings
+</pre>
+<p>
+development:
+</p>
+<pre>
+  &lt;&lt;: *default_settings
+</pre>
+
+    </div>
+    
+
+    
+
+    
+    
+
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</div>
+    </div>
+  </body>
+</html>
