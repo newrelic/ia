@@ -6,6 +6,7 @@ require 'new_relic/ia/memcached_sampler'
 describe NewRelic::IA::CLI, "execute" do
   before(:each) do
     @stdout_io = StringIO.new
+    NewRelic::Agent::Agent.any_instance.stubs(:connected?).returns(true)
   end
   it "should print help" do
     NewRelic::IA::CLI.execute(@stdout_io, [ "-h"])
@@ -30,8 +31,12 @@ describe NewRelic::IA::CLI, "execute" do
   end
   it "should start memcached" do
     NewRelic::Agent::StatsEngine.any_instance.expects(:add_harvest_sampler)
+    NewRelic::IA::MemcachedSampler.any_instance.stubs(:check)
     stat = NewRelic::IA::CLI.execute(@stdout_io, [ "memcached"])
     stat.should == nil
+  end
+  it "should install a newrelic.yml" do
+    NewRelic::IA::CLI.execute(@stdout_io, ["--install", "01234567"])
   end
   it "should override the env" do
     stat = NewRelic::IA::CLI.execute(@stdout_io, [ "disk", "-e", "production"])

@@ -43,8 +43,8 @@ module NewRelic::IA
                   "quiet output") { NewRelic::IA::CLI.log.level = Logger::ERROR }
           opts.on("-e", "--environment=ENV",
                   "use ENV section in newrelic.yml") { |e| @env = e }
-          opts.on("--install",
-                  "create a default newrelic.yml") { |e| return self.install(stdout) }
+          opts.on("--install license_key",
+                  "create a default newrelic.yml") { |key| return self.install(key, stdout) }
           
           opts.on("-h", "--help",
                   "Show this help message.") { stdout.puts "#{opts}\n"; return 0 }
@@ -129,7 +129,7 @@ module NewRelic::IA
       end
     end
     
-    def self.install stdout
+    def self.install license_key, stdout
       require_newrelic_rpm
       if NewRelic::VersionNumber.new(NewRelic::VERSION::STRING) < '2.12'
         if File.exists? "newrelic.yml"
@@ -146,7 +146,9 @@ module NewRelic::IA
           require 'new_relic/command'
           cmd = NewRelic::Command::Install.new \
           :src_file => File.join(File.dirname(__FILE__), "newrelic.yml"),
-          :generated_for_user => "Generated on #{Time.now.strftime('%b %d, %Y')}, from version #{NewRelic::IA::VERSION}"
+          :generated_for_user => "Generated on #{Time.now.strftime('%b %d, %Y')}, from version #{NewRelic::IA::VERSION}",
+          :app_name => 'System Monitor',
+          :license_key => license_key
           cmd.run 
           0 # normal
         rescue NewRelic::Command::CommandFailure => e
