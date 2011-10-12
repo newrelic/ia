@@ -5,8 +5,7 @@ log/
 doc/
 docs
 html/
-
-*~
+Gemfile.lock
 .DS_Store
 newrelic_ia.log
  
