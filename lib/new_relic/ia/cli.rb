@@ -5,21 +5,21 @@ require 'fileutils'
 module NewRelic::IA
 
   class InitError < StandardError;  end
-  
+
   class CLI
-    
+
     LOGFILE = "newrelic_ia.log"
-    
+
     class << self
-      
+
       def log
         @log ||= Logger.new LOGFILE
       end
-      
+
       def level= l
         log.level = l
       end
-      
+
       # Run the command line args.  Return nil if running
       # or an exit status if not.
       def execute(stdout, arguments=[])
@@ -28,9 +28,9 @@ module NewRelic::IA
         parser = OptionParser.new do |opts|
           opts.banner = <<-BANNER.gsub(/^ */,'')
           New Relic Infrastructure Agent (IA) version #{NewRelic::IA::VERSION}
-          Monitor different aspects of your environment with New Relic RPM.  
+          Monitor different aspects of your environment with New Relic RPM.
 
-          Usage: #{File.basename($0)} [ options ] aspect, aspect.. 
+          Usage: #{File.basename($0)} [ options ] aspect, aspect..
 
           aspect: one or more of 'memcached', 'iostat' or 'disk' (more to come)
         BANNER
@@ -45,7 +45,7 @@ module NewRelic::IA
                   "use ENV section in newrelic.yml") { |e| @env = e }
           opts.on("--install license_key",
                   "create a default newrelic.yml") { |key| return self.install(key, stdout) }
-          
+
           opts.on("-h", "--help",
                   "Show this help message.") { stdout.puts "#{opts}\n"; return 0 }
           begin
@@ -70,7 +70,7 @@ module NewRelic::IA
           stdout.puts parser
           return 1
         end
-        require_newrelic_rpm        
+        require_newrelic_rpm
         NewRelic::Agent.manual_start  :env => @env, :monitor_mode => true, :log => self.log
         # connected? due in a future version
         if not (NewRelic::Agent.instance.connected? rescue true)
@@ -85,7 +85,7 @@ module NewRelic::IA
         stdout.puts e.message
         return 1
       end
-      
+
     end
     # Aspect definitions
     def iostat # :nodoc:
@@ -94,13 +94,13 @@ module NewRelic::IA
       reader = NewRelic::IA::IostatReader.new
       Thread.new { reader.run }
     end
-    
+
     def disk
       self.class.log.info "Starting disk sampler..."
       require 'new_relic/ia/disk_sampler'
-      NewRelic::Agent.instance.stats_engine.add_harvest_sampler NewRelic::IA::DiskSampler.new    
+      NewRelic::Agent.instance.stats_engine.add_harvest_sampler NewRelic::IA::DiskSampler.new
     end
-    
+
     def memcached
       require 'new_relic/ia/memcached_sampler'
       s = NewRelic::IA::MemcachedSampler.new
@@ -109,11 +109,11 @@ module NewRelic::IA
     end
 
     private
-    
+
     def log
       self.class.log
     end
-    
+
     def self.require_newrelic_rpm
       begin
         require 'newrelic_rpm'
@@ -128,14 +128,14 @@ module NewRelic::IA
         end
       end
     end
-    
+
     def self.install license_key, stdout
       require_newrelic_rpm
       if NewRelic::VersionNumber.new(NewRelic::VERSION::STRING) < '2.12'
         if File.exists? "newrelic.yml"
           stdout.puts "A newrelic.yml file already exists.  Please remove it before installing another."
           return 1 # error
-        else      
+        else
           FileUtils.copy File.join(File.dirname(__FILE__), "newrelic.yml"), "."
           stdout.puts "A newrelic.yml template was copied to #{File.expand_path('.')}."
           stdout.puts "Please add a license key to the file before starting."
@@ -149,7 +149,7 @@ module NewRelic::IA
           :generated_for_user => "Generated on #{Time.now.strftime('%b %d, %Y')}, from version #{NewRelic::IA::VERSION}",
           :app_name => 'System Monitor',
           :license_key => license_key
-          cmd.run 
+          cmd.run
           0 # normal
         rescue NewRelic::Command::CommandFailure => e
           stdout.puts e.message
