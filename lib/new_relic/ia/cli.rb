@@ -131,30 +131,19 @@ module NewRelic::IA
 
     def self.install license_key, stdout
       require_newrelic_rpm
-      if NewRelic::VersionNumber.new(NewRelic::VERSION::STRING) < '2.12'
-        if File.exists? "newrelic.yml"
-          stdout.puts "A newrelic.yml file already exists.  Please remove it before installing another."
-          return 1 # error
-        else
-          FileUtils.copy File.join(File.dirname(__FILE__), "newrelic.yml"), "."
-          stdout.puts "A newrelic.yml template was copied to #{File.expand_path('.')}."
-          stdout.puts "Please add a license key to the file before starting."
-          return 0 # normal
-        end
-      else
-        begin
-          require 'new_relic/command'
-          cmd = NewRelic::Command::Install.new \
-            :src_file => File.join(File.dirname(__FILE__), "newrelic.yml"),
-            :generated_for_user => "Generated on #{Time.now.strftime('%b %d, %Y')}, from version #{NewRelic::IA::VERSION}",
-            :app_name => 'System Monitor',
-            :license_key => license_key
-          cmd.run
-          0 # normal
-        rescue NewRelic::Command::CommandFailure => e
-          stdout.puts e.message
-          1 # error
-        end
+      begin
+        require 'new_relic/command'
+        FileUtils.mkdir(File.join(File.dirname(__FILE__), "config"))
+        cmd = NewRelic::Command::Install.new \
+          :src_file => File.join(File.dirname(__FILE__), "config/newrelic.yml"),
+          :generated_for_user => "Generated on #{Time.now.strftime('%b %d, %Y')}, from version #{NewRelic::IA::VERSION}",
+          :app_name => 'System Monitor',
+          :license_key => license_key
+        cmd.run
+        0 # normal
+      rescue NewRelic::Command::CommandFailure => e
+        stdout.puts e.message
+        1 # error
       end
     end
   end
