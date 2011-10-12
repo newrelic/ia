@@ -33,7 +33,7 @@ module NewRelic::IA
           Usage: #{File.basename($0)} [ options ] aspect, aspect..
 
           aspect: one or more of 'memcached', 'iostat' or 'disk' (more to come)
-        BANNER
+          BANNER
           opts.separator ""
           opts.on("-a", "--all",
                   "use all available aspects") { @aspects = %w[iostat disk memcached] }
@@ -60,7 +60,7 @@ module NewRelic::IA
           end
         end
         @aspects.delete_if do |aspect|
-          unless self.instance_methods(false).include? aspect
+          unless ASPECTS.include? aspect.to_sym
             stdout.puts "Unknown aspect: #{aspect}"
             true
           end
@@ -73,9 +73,7 @@ module NewRelic::IA
         require_newrelic_rpm
         NewRelic::Agent.manual_start  :env => @env, :monitor_mode => true, :log => self.log
         # connected? due in a future version
-        if not (NewRelic::Agent.instance.connected? rescue true)
-          raise InitError, "Unable to connect to RPM server.  Agent not started."
-        end
+        raise InitError, "Unable to connect to RPM server.  Agent not started." unless NewRelic::Agent.instance.connected?
         cli = new
         @aspects.each do | aspect |
           cli.send aspect
@@ -87,6 +85,8 @@ module NewRelic::IA
       end
 
     end
+
+    ASPECTS = [:iostat, :disk, :memcached]
     # Aspect definitions
     def iostat # :nodoc:
       self.class.log.info "Starting iostat monitor..."
@@ -145,10 +145,10 @@ module NewRelic::IA
         begin
           require 'new_relic/command'
           cmd = NewRelic::Command::Install.new \
-          :src_file => File.join(File.dirname(__FILE__), "newrelic.yml"),
-          :generated_for_user => "Generated on #{Time.now.strftime('%b %d, %Y')}, from version #{NewRelic::IA::VERSION}",
-          :app_name => 'System Monitor',
-          :license_key => license_key
+            :src_file => File.join(File.dirname(__FILE__), "newrelic.yml"),
+            :generated_for_user => "Generated on #{Time.now.strftime('%b %d, %Y')}, from version #{NewRelic::IA::VERSION}",
+            :app_name => 'System Monitor',
+            :license_key => license_key
           cmd.run
           0 # normal
         rescue NewRelic::Command::CommandFailure => e
