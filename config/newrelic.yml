@@ -1,0 +1,35 @@
+#
+# This is a configuration file for the RPM Agent, tailored
+# for use as a system monitor.
+#
+# Generated on Oct 12, 2011, from version 0.2.2
+#
+common: &default_settings
+  log_level: info
+  license_key: 'test'
+
+  app_name: System Monitor
+  ssl: false
+
+  # Set the array of nodes for the memcache monitor
+  memcached_nodes:
+    - localhost:11211
+#   - localhost:11212
+#   - localhost:11213
+
+  # These settings ensure we don't end up actually monitoring
+  # the IA agent itself--we aren't really interested in that.
+  # Don't change these.
+  disable_samplers: true  
+  capture_params: false
+  transaction_tracer:
+    enabled: false
+
+# NOTE if your application has other named environments, you should
+# provide newrelic conifguration settings for these enviromnents here.
+production:
+  <<: *default_settings
+
+development:
+  <<: *default_settings
+

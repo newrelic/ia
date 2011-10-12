@@ -14,7 +14,7 @@ The New Relic Infrastructure Agent (IA) collects system metrics and transmits
 them to the RPM server where they can be viewed with custom dashboards.
 EOF
 
-# See http://www.rubygems.org/read/chapter/20 
+# See http://www.rubygems.org/read/chapter/20
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
@@ -32,7 +32,7 @@ begin
       "--inline-source" <<
       "--title" << SUMMARY <<
       "-m" << "README.rdoc"
-    
+
     gem.files.reject! { |fn| fn =~ /PostInstall.txt|pkg\/|rdoc\// }
     gem.extra_rdoc_files = %w[CHANGELOG LICENSE README.rdoc bin/newrelic_ia]
     gem.add_dependency 'newrelic_rpm', '>=2.10.6'
@@ -67,8 +67,6 @@ Spec::Rake::SpecTask.new(:spec) do |spec|
   spec.libs << 'lib' << 'spec'
   spec.spec_files = FileList['spec/**/*_spec.rb']
 end
-
-task :spec => :check_dependencies
 
 task :default => :spec
 

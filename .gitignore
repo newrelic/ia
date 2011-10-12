@@ -1,3 +1,4 @@
+*.swp
 /Manifest
 /newrelic.yml
 log/
@@ -17,5 +18,3 @@ newrelic_ia.log
  
 # other scm
 .svn
-
- 
