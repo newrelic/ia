@@ -4,8 +4,7 @@ begin
   require 'newrelic_rpm'
 rescue LoadError
   require 'rubygems' unless ENV['NO_RUBYGEMS']
-  gem 'rspec'
-  require 'spec'
+  require 'rspec'
   require 'newrelic_ia'
   require 'newrelic_rpm'
 end
@@ -15,7 +14,7 @@ require 'new_relic/ia/cli'
 module NewRelic; TEST = true; end unless defined? NewRelic::TEST
 NewRelic::IA::CLI.level = Logger::ERROR
 
-Spec::Runner.configure do |config|
+RSpec.configure do |config|
   # == Fixtures
   #
   # You can declare fixtures for each example_group like this:
@@ -49,6 +48,6 @@ Spec::Runner.configure do |config|
   config.mock_with :mocha
 
   # == Notes
-  # 
+  #
   # For more information take a look at Spec::Example::Configuration and Spec::Runner
 end

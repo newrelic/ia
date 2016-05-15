@@ -9,7 +9,7 @@ to your RPM console which can be viewed with custom dashboards.
 
 == Synopsis
 
-    newrelic_ia [ options ] aspect, aspect.. 
+    newrelic_ia [ options ] aspect, aspect..
 
     aspect: one or more of 'iostat' or 'disk' or 'memcached' (more to come)
 
@@ -17,7 +17,7 @@ to your RPM console which can be viewed with custom dashboards.
     -v, --verbose                    debug output
     -q, --quiet                      quiet output
     -e, --environment=ENV            use ENV section in newrelic.yml
-        --install                    create a default newrelic.yml
+        --install KEY                create a default newrelic.yml
     -h, --help                       Show this help message.
 
 == Requirements
@@ -29,15 +29,15 @@ to your RPM console which can be viewed with custom dashboards.
 
     sudo gem install newrelic_ia
 
-Once installed, run from the home directory of your Rails 
+Once installed, run from the home directory of your Rails
 application, or create a separate working directory and run
 
-    newrelic_ia --install
+    newrelic_ia --install KEY
 
 to create a template newrelic.yml file you can use.  Edit this file
 and substitute your license key and app_name value.
 
-specify memcached nodes in memcached-nodes.txt. 
+specify memcached nodes in memcached-nodes.txt.
 
 == Credits
 
@@ -58,24 +58,24 @@ Memcached stats are reported for each node and also sample reports aggregated st
 
     uptime                     Number of seconds this server has been running
     curr_items                 Current number of items stored by the server
-    total_items                Total number of items stored by this server 
+    total_items                Total number of items stored by this server
                                ever since it started
     bytes                      Current number of bytes used by this server to store items
     curr_connections           Number of open connections
-    total_connections          Total number of connections opened since 
+    total_connections          Total number of connections opened since
                                the server started running
     connection_structures      Number of connection structures allocated by the server
     cmd_get                    Cumulative number of retrieval requests
     cmd_set                    Cumulative number of storage requests
     get_hits                   Number of keys that have been requested and found present
     get_misses                 Number of items that have been requested and not found
-    evictions                  Number of valid items removed from cache to free 
+    evictions                  Number of valid items removed from cache to free
                                memory for new items
     bytes_read                 Total number of bytes read by this server from network
     bytes_written              Total number of bytes sent by this server to network
     limit_maxbytes             Number of bytes this server is allowed to use for storage
     threads                    Number of worker threads requested
-    
+
 Derived Stats (computed stats):
 
     free_maxbytes              Number of free bytes this server has available for storage
@@ -84,7 +84,7 @@ Stats Derivatives (time derivatives of stats):
 
     hit_ratio                  Percent of keys that have been requested and found present
     miss_ratio                 Percent of keys that have been requested and found missing
-    rpm                        Requests per minutes 
+    rpm                        Requests per minutes
     gpm                        Gets per minutes
     hpm                        Hits per minutes
     mpm                        Misses per minutes
@@ -99,34 +99,34 @@ Liquid template for NewRelic custom dashboard:
 
     <div>
         <div style="float: left; width: 50%;">
-            {% line_chart value:average_value title:'Cache Miss Ratio' metric:'System/Memcached/Miss Ratio' simple_tooltip:true label:segment_3 value_suffix:'%' %}
+            {% line_chart value:average_value title:'Cache Miss Ratio' metric:'System/Memcached/all/miss_ratio' simple_tooltip:true label:segment_3 value_suffix:'%' %}
         </div>
         <div style="float: left; width: 50%;">
-            {% line_chart value:average_value title:'Cache Memory' regexp:'System/Memcached/(Bytes|Free Bytes|Limit Maxbytes)' simple_tooltip:true label:segment_3 %}
-        </div>
-        <br style="clear: both" />
-    </div>
-    
-    <div style="padding-top: 20px">&nbsp;</div>
-    
-    <div>
-        <div style="float: left; width: 50%;">
-            {% line_chart value:average_value title:'Cache Gets & Sets' regexp:'System/Memcached/(Gpm|Spm)' simple_tooltip:true label:segment_3 %}
-        </div>
-        <div style="float: left; width: 50%;">
-            {% line_chart value:average_value title:'Cache Misses, Flushes, & Evictions' regexp:'System/Memcached/(Mpm|Epm|Fpm)' simple_tooltip:true label:segment_3 %}
+            {% line_chart value:average_value title:'Cache Memory' regexp:'System/Memcached/all/(bytes|free_bytes|limit_maxbytes)' simple_tooltip:true label:segment_3 %}
         </div>
         <br style="clear: both" />
     </div>
-    
+
     <div style="padding-top: 20px">&nbsp;</div>
-    
+
     <div>
         <div style="float: left; width: 50%;">
-        {% line_chart value:average_value title:'Active Connections' metric:'System/Memcached/Curr Connections' simple_tooltip:true hide_legend:true %}
+            {% line_chart value:average_value title:'Cache Gets & Sets' regexp:'System/Memcached/all/(gpm|spm)' simple_tooltip:true label:segment_3 %}
         </div>
         <div style="float: left; width: 50%;">
-        {% line_chart value:average_value title:'Cache Objects' metric:'System/Memcached/Curr Items' simple_tooltip:true hide_legend:true %}
+            {% line_chart value:average_value title:'Cache Misses, Flushes, & Evictions' regexp:'System/Memcached/all/(mpm|epm|fpm)' simple_tooltip:true label:segment_3 %}
+        </div>
+        <br style="clear: both" />
+    </div>
+
+    <div style="padding-top: 20px">&nbsp;</div>
+
+    <div>
+        <div style="float: left; width: 50%;">
+        {% line_chart value:average_value title:'Active Connections' metric:'System/Memcached/all/curr_connections' simple_tooltip:true hide_legend:true %}
+        </div>
+        <div style="float: left; width: 50%;">
+        {% line_chart value:average_value title:'Cache Objects' metric:'System/Memcached/all/curr_items' simple_tooltip:true hide_legend:true %}
         </div>
         <br style="clear: both" />
     </div>
